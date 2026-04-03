@@ -1,0 +1,193 @@
+ASSIGNMENT 2 GUIDE FOR LOOP
+
+What the assignment is mainly looking for:
+
+1. Server-side form validation in PHP
+2. XSS prevention using trim() and htmlspecialchars()
+3. Sessions
+4. Login system
+5. Logout
+6. Cookies
+7. PHP filters
+8. One extra feature
+9. Clear comments and a clean submission
+
+What is already in your project:
+
+- templates/login_page.php
+  Login form already exists
+
+- templates/register.php
+  Registration form already exists
+
+- backend/login_handler.php
+  Already has server-side validation, trim/htmlspecialchars/stripslashes, filter_var(), session login, redirect on invalid login, redirect to dashboard on valid login
+
+- backend/register_handler.php
+  Already has server-side validation and stores the registered user in session
+
+- backend/logout.php
+  Already logs the user out with session_unset() and session_destroy()
+
+- templates/dashboard.php
+  Already acts like a protected page because it checks if the login session exists
+
+- templates/profile.php
+  Also checks if the user is logged in
+
+So the main gap is:
+
+- proper database setup
+- connecting login/register to the database instead of only session values
+- adding one cookie feature
+- cleaning the final submission
+
+Best order to finish the assignment:
+
+STEP 1: Leave the front-end forms mostly as they are
+- You do not need to redesign everything
+- Keep login_page.php and register.php
+- Just make sure labels, placeholders, and error messages are clear
+
+STEP 2: Set up the database
+- Use phpMyAdmin or MySQL
+- Create a database called loop_db
+- Create a users table
+- Minimum useful columns:
+  id
+  username
+  email
+  password
+
+Better version:
+  id INT AUTO_INCREMENT PRIMARY KEY
+  username VARCHAR(50) NOT NULL
+  email VARCHAR(100) NOT NULL UNIQUE
+  password VARCHAR(255) NOT NULL
+
+STEP 3: Connect PHP to the database
+- backend/db.php is already there
+- Check the database name, username, and password in that file
+- Test the connection first before changing login/register logic
+
+STEP 4: Update registration so it saves to the database
+- In backend/register_handler.php:
+  keep the validation you already have
+  keep trim() and htmlspecialchars()
+  keep filter_var() for email
+- After validation passes:
+  insert username, email, and password into the users table
+
+Important:
+- If you can, use password_hash() before saving the password
+- If the lecturer expects simpler work, at minimum show that validation and DB insert both work
+- If you use password_hash(), mention that in your comments/report because it strengthens security
+
+STEP 5: Update login so it checks the database
+- In backend/login_handler.php:
+  keep the existing validation
+  look up the user by email in the database
+  compare the password
+- If login fails:
+  redirect back to login_page.php
+  show an error message
+- If login works:
+  set session values
+  redirect to dashboard.php
+
+If you use password_hash() in register:
+- use password_verify() in login
+
+STEP 6: Keep sessions as proof of authentication
+- You already have this mostly working
+- Keep the session check on dashboard.php
+- Keep the session check on profile.php
+- Keep logout.php as the page that destroys the session
+
+STEP 7: Add one cookie feature
+- The easiest option is:
+  remember the user's email after login
+
+Simple idea:
+- setcookie("user_email", $email, time() + 3600);
+- then show it back in the login form if it exists
+
+Other easy cookie ideas:
+- remember dark mode
+- remember a preferred username
+
+STEP 8: Use PHP filters clearly
+- You already use filter_var() for email
+- If you want to make this more obvious for the assignment, you can also use filter_input()
+- Example:
+  $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+
+STEP 9: Comment the code clearly
+- Add short comments above the important sections only
+- Example sections to comment:
+  server-side validation
+  session handling
+  successful login redirect
+  invalid login redirect
+  logout logic
+  cookie logic
+  database connection
+
+STEP 10: Test these exact cases
+- empty login form
+- invalid email
+- wrong password
+- correct login
+- direct access to dashboard without login
+- logout then try dashboard again
+- registration with missing fields
+- registration with mismatched passwords
+- cookie working
+
+What I would focus on if I were you:
+
+1. Get the database connection working
+2. Save a registered user into the database
+3. Check login against the database
+4. Keep sessions working
+5. Add one simple cookie
+6. Remove unneeded junk before submission
+
+What you probably do NOT need right now:
+
+- search
+- marketplace functionality
+- create post functionality
+- full profile editing
+- advanced UI extras
+
+What should probably NOT go into the final zip:
+
+- throwaway_debug folder
+- .vscode folder
+- lecture notes
+- details folder
+- any temporary test files
+- scripts/start-php-preview.ps1 if you are not using it for the website itself
+
+What should go into the final zip:
+
+- .php files
+- .css files
+- .js files
+- required images/assets
+
+Minimum "extra feature" suggestion:
+
+- Keep register.php as the extra feature
+- That is probably the easiest option because it already exists
+
+Short version:
+
+- Keep the current forms
+- wire register to the database
+- wire login to the database
+- keep sessions
+- add one cookie
+- test the redirects
+- clean the zip before submission

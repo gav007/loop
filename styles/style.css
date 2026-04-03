@@ -1,0 +1,373 @@
+/* Font 1: Inter
+Use for: body text, paragraphs, labels, form inputs, general UI text
+*/
+
+/* Font 2: Poppins
+Use for: headings like Sign In, Register, Dashboard titles, nav items, button text
+*/
+
+/* Font 3: Playfair Display
+Use for: big hero headline on landing page only (the main slogan)
+*/
+
+/* Font 4: Roboto
+Use for: backup body font OR small utility text like footer, timestamps, meta text
+*/
+
+/* REPORT: Design section references the font pairing above and the palette in header/buttons. */
+/* REPORT: Evaluation section uses this file for CSS validator output. */
+
+* {
+  box-sizing: border-box;
+}
+header {
+  background-color: #3b5998;
+  transition: all 1s;
+}
+
+header .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brand img {
+  width: 34px;
+  height: 34px;
+}
+
+.brand-name {
+  font-family: "Sora", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+}
+
+.home-variant {
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.home-variant:hover {
+  transform: translateY(-1px);
+}
+
+.home-variant-outline {
+  background: transparent;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.home-variant-outline:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  background-color: rgb(248, 247, 245);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all 1s;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Poppins", sans-serif;
+  color: #2f477a;
+  transition: all 1s;
+}
+
+a {
+  color: #2f477a;
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+a:hover,
+a:focus-visible {
+  color: #1f3561;
+  text-decoration-color: currentColor;
+}
+
+a:active {
+  color: #16284c;
+}
+
+main {
+  flex: 1;
+  transition: all 1s;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 1s;
+}
+
+.main-row {
+  display: flex;
+  gap: 16px;
+  transition: all 1s;
+}
+
+/* REPORT: Wireframe (desktop) uses the two-column .main-row layout. */
+
+.card {
+  margin-top: 75px;
+
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  flex: 1;
+  overflow: hidden;
+  transition: all 1s;
+}
+
+.card h1 {
+  color: #2f477a;
+  text-align: center;
+  transition: all 1s;
+}
+
+.card label {
+  background: none;
+  padding: 0;
+  color: #111;
+  font-weight: 600;
+  transition: all 1s;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  transition: all 1s;
+}
+
+.field-group label {
+  color: #2f477a;
+  transition: all 1s;
+}
+
+.field {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #bbb;
+  border-radius: 12px;
+  outline: none;
+  background-color: #f4f2f2;
+  transition: all 1s;
+}
+
+.hero-logo {
+  width: 450px;
+  max-width: 100%;
+  transition: all 1s;
+  transform: rotate(360);
+}
+
+.img-panel {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  transition: all 1s;
+}
+
+.hero-tagline {
+  text-align: center;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-top: 16px;
+  line-height: 1.4;
+  font-size: 18px;
+  font-weight: 500;
+  color: #2f477a;
+  transition: all 1s;
+}
+
+.hero-copy {
+  margin: 10px 8px;
+  line-height: 1.7;
+  color: #334a78;
+  font-size: 12px;
+  text-align: center;
+  transition: all 1s;
+}
+
+.btn {
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+  padding: 12px 16px;
+  background: #13cf13;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+  transition: all 1s;
+}
+
+.btn-submit {
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #3b5998, #5b7fd6);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+  transition: all 1s;
+}
+
+.btn-submit:hover {
+  background: #2f477a;
+  color: #ffffff;
+}
+
+.btn:hover {
+  background-color: #1ab51a;
+  color: white;
+}
+
+button {
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 12px;
+  background: #13cf13;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 1s;
+}
+
+footer {
+  background-color: #3b5998;
+  text-align: center;
+  transition: all 1s;
+}
+
+footer .wrap {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  opacity: 0.95;
+  color: aliceblue;
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+@media (max-width: 700px) {
+  header .wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-row {
+    flex-direction: column;
+  }
+}
+
+/* dark theme with some javaScript */
+
+.dark-theme {
+  background-color: #211832;
+  transition: all 1s;
+}
+
+.dark-theme header {
+  background-color: #412b6b;
+  color: rgb(255, 255, 255);
+  transition: all 1s;
+}
+
+.dark-theme footer {
+  background-color: #412b6b;
+  color: rgb(255, 255, 255);
+  transition: all 1s;
+}
+
+.dark-theme .card {
+  background-color: #412b6b;
+  color: white;
+  transition: all 1s;
+  box-shadow: 0 0 25px #5c3e94;
+  border: 1px solid #f25912;
+}
+
+.dark-theme .hero-tagline {
+  background-color: transparent;
+  color: white;
+}
+
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3,
+.dark-theme label,
+.dark-theme .hero-copy,
+.dark-theme .sidebar h2,
+.dark-theme .sidebar nav h3 a {
+  color: white;
+  transition: all 1s;
+}
+
+.dark-theme .btn-submit {
+  background: #f25912;
+  transition: all 1s;
+}
+
+.dark-theme .btn-submit:hover {
+  background: #f25912;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+}
+
+.dark-theme .hero-logo {
+  transform: rotate(360deg);
+  transition: all 1s;
+}
+
+.home-variant.home-variant-outline:hover {
+  background-color: white;
+  color: #111;
+}

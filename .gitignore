@@ -1,0 +1,4 @@
+.codex
+.vscode/
+LOGIN_DETAILS.txt
+backend/db.local.php
