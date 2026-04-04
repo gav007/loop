@@ -1,20 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION["login"]) || $_SESSION["login"] != 1) {
-    $_SESSION["loginError"] = "You must be logged in to view this page.";
-    header("Location: login_page.php");
-    exit();
-}
-
-$username = "";
-
-if (isset($_SESSION["username"])) {
-    $username = $_SESSION["username"];
-}
-?>
-
-
 <!doctype html>
 <html lang="en">
   <head>

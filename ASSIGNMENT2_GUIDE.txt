@@ -1,193 +1,220 @@
-ASSIGNMENT 2 GUIDE FOR LOOP
+ASSIGNMENT 2: ULTRA-BASIC CHECKLIST FOR LOOP
+============================================
 
-What the assignment is mainly looking for:
+This guide turns the backend part of the assignment into 20 very small tasks.
+The idea is simple:
 
-1. Server-side form validation in PHP
-2. XSS prevention using trim() and htmlspecialchars()
-3. Sessions
-4. Login system
-5. Logout
-6. Cookies
-7. PHP filters
-8. One extra feature
-9. Clear comments and a clean submission
+1. Do one tiny task.
+2. Test that one thing.
+3. Make one Git commit.
+4. Move to the next task.
 
-What is already in your project:
+No code is included here. This is only a plain-English plan using the file names already in this project.
 
+Current project files that matter most:
 - templates/login_page.php
-  Login form already exists
-
-- templates/register.php
-  Registration form already exists
-
-- backend/login_handler.php
-  Already has server-side validation, trim/htmlspecialchars/stripslashes, filter_var(), session login, redirect on invalid login, redirect to dashboard on valid login
-
-- backend/register_handler.php
-  Already has server-side validation and stores the registered user in session
-
-- backend/logout.php
-  Already logs the user out with session_unset() and session_destroy()
-
 - templates/dashboard.php
-  Already acts like a protected page because it checks if the login session exists
+- templates/register.php
+- backend/db_connect.php
+- backend/login_handler.php
+- backend/logout.php
 
-- templates/profile.php
-  Also checks if the user is logged in
+--------------------------------------------------
+PHASE 1: GET ORGANISED BEFORE WRITING LOGIC
+--------------------------------------------------
 
-So the main gap is:
+STEP 1: Confirm the login flow on paper
+Goal: Be clear about the route before changing anything.
+Files to check: templates/login_page.php, backend/login_handler.php, templates/dashboard.php
+Hint: Write the flow in one sentence: login form -> handler -> validation -> database check -> session -> redirect.
+Suggested commit: docs: map basic login flow
 
-- proper database setup
-- connecting login/register to the database instead of only session values
-- adding one cookie feature
-- cleaning the final submission
+STEP 2: Use one database connection file only
+Goal: Avoid confusion about which file connects to MySQL.
+Files to check: backend/db_connect.php
+Hint: Keep a single connection file. If it prints success text, remove that later because output can break redirects.
+Suggested commit: chore: confirm single db connection file
 
-Best order to finish the assignment:
+STEP 3: Decide your session names before using them
+Goal: Keep session data simple and consistent.
+Files to plan around: login handler, login page, dashboard, logout
+Hint: Pick a small set of names only, such as login flag, user id, username, error message, and old email.
+Suggested commit: docs: plan session keys
 
-STEP 1: Leave the front-end forms mostly as they are
-- You do not need to redesign everything
-- Keep login_page.php and register.php
-- Just make sure labels, placeholders, and error messages are clear
+STEP 4: Decide what your XSS cleanup step means
+Goal: Understand what you are protecting against.
+Files to plan around: backend handlers and pages that display user data
+Hint: Keep it basic. Clean incoming text with trimming, and escape output with special-character conversion when showing values on the page.
+Suggested commit: docs: plan input cleaning and output escaping
 
-STEP 2: Set up the database
-- Use phpMyAdmin or MySQL
-- Create a database called loop_db
-- Create a users table
-- Minimum useful columns:
-  id
-  username
-  email
-  password
+STEP 5: Write down the minimum login rules
+Goal: Know exactly what counts as valid input.
+Files to check: templates/login_page.php
+Hint: Minimum rules are enough: email must not be empty, password must not be empty, email must look like a real email.
+Suggested commit: docs: list minimum validation rules
 
-Better version:
-  id INT AUTO_INCREMENT PRIMARY KEY
-  username VARCHAR(50) NOT NULL
-  email VARCHAR(100) NOT NULL UNIQUE
-  password VARCHAR(255) NOT NULL
+--------------------------------------------------
+PHASE 2: BUILD THE LOGIN VALIDATION IN TINY STEPS
+--------------------------------------------------
 
-STEP 3: Connect PHP to the database
-- backend/db.php is already there
-- Check the database name, username, and password in that file
-- Test the connection first before changing login/register logic
+STEP 6: Create or tidy the login handler entry point
+Goal: Have one backend file that only processes the login form.
+Files to change: backend/login_handler.php
+Hint: This file should act as the decision-maker for login, not as a page the user reads directly.
+Suggested commit: feat: prepare login handler
 
-STEP 4: Update registration so it saves to the database
-- In backend/register_handler.php:
-  keep the validation you already have
-  keep trim() and htmlspecialchars()
-  keep filter_var() for email
-- After validation passes:
-  insert username, email, and password into the users table
+STEP 7: Check that the form submits the right way
+Goal: Make sure the handler only accepts a real form submission.
+Files to check: templates/login_page.php, backend/login_handler.php
+Hint: The form should submit to the login handler, and the handler should only process a proper POST request.
+Suggested commit: feat: guard login handler by request type
 
-Important:
-- If you can, use password_hash() before saving the password
-- If the lecturer expects simpler work, at minimum show that validation and DB insert both work
-- If you use password_hash(), mention that in your comments/report because it strengthens security
+STEP 8: Read the submitted email and password
+Goal: Capture the form values once and keep the flow simple.
+Files to change: backend/login_handler.php
+Hint: Read the two login fields first. Clean them straight away so you are not passing raw input around.
+Suggested commit: feat: capture login form values
 
-STEP 5: Update login so it checks the database
-- In backend/login_handler.php:
-  keep the existing validation
-  look up the user by email in the database
-  compare the password
-- If login fails:
-  redirect back to login_page.php
-  show an error message
-- If login works:
-  set session values
-  redirect to dashboard.php
+STEP 9: Add separate empty checks for each field
+Goal: Give simple feedback instead of one vague failure.
+Files to change: backend/login_handler.php
+Hint: Treat missing email and missing password as two different checks, even if both end up on the same form.
+Suggested commit: feat: add empty checks for login fields
 
-If you use password_hash() in register:
-- use password_verify() in login
+STEP 10: Add the PHP filter for email
+Goal: Cover the "PHP filters" requirement in the simplest possible way.
+Files to change: backend/login_handler.php
+Hint: This just means using PHP's built-in email validation, not making your own complicated rule.
+Suggested commit: feat: add email filter validation
 
-STEP 6: Keep sessions as proof of authentication
-- You already have this mostly working
-- Keep the session check on dashboard.php
-- Keep the session check on profile.php
-- Keep logout.php as the page that destroys the session
+STEP 11: Store errors in sessions
+Goal: Send messages back to the login page after validation fails.
+Files to change: backend/login_handler.php, templates/login_page.php
+Hint: Sessions are the bridge between pages. Keep them small: error text and old email value are enough.
+Suggested commit: feat: store login validation errors in session
 
-STEP 7: Add one cookie feature
-- The easiest option is:
-  remember the user's email after login
+STEP 12: Redirect back to the login page on failure
+Goal: Finish the invalid-login path cleanly.
+Files to change: backend/login_handler.php
+Hint: If validation fails, set the session messages first, redirect back to templates/login_page.php, then stop further processing.
+Suggested commit: feat: redirect invalid login back to form
 
-Simple idea:
-- setcookie("user_email", $email, time() + 3600);
-- then show it back in the login form if it exists
+--------------------------------------------------
+PHASE 3: CHECK LOGIN AGAINST THE DATABASE
+--------------------------------------------------
 
-Other easy cookie ideas:
-- remember dark mode
-- remember a preferred username
+STEP 13: Look up the user by email
+Goal: See whether the submitted email exists in the users table.
+Files to change: backend/login_handler.php, backend/db_connect.php
+Hint: Use a prepared statement for the lookup. This is the safe, standard approach and helps with SQL injection prevention.
+Suggested commit: feat: add user lookup by email
 
-STEP 8: Use PHP filters clearly
-- You already use filter_var() for email
-- If you want to make this more obvious for the assignment, you can also use filter_input()
-- Example:
-  $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+STEP 14: Handle the "user not found" case
+Goal: Complete the failure path if the email does not exist.
+Files to change: backend/login_handler.php
+Hint: Use one simple login error. Do not over-explain which part was wrong.
+Suggested commit: feat: handle unknown login email
 
-STEP 9: Comment the code clearly
-- Add short comments above the important sections only
-- Example sections to comment:
-  server-side validation
-  session handling
-  successful login redirect
-  invalid login redirect
-  logout logic
-  cookie logic
-  database connection
+STEP 15: Verify the password properly
+Goal: Complete the actual authentication check.
+Files to change: backend/login_handler.php
+Hint: If the database stores hashed passwords, compare against the hash using PHP's password tools rather than plain-text matching.
+Suggested commit: feat: verify password against stored hash
 
-STEP 10: Test these exact cases
-- empty login form
-- invalid email
-- wrong password
-- correct login
-- direct access to dashboard without login
-- logout then try dashboard again
-- registration with missing fields
-- registration with mismatched passwords
-- cookie working
+STEP 16: Create the login session on success
+Goal: Mark the user as signed in.
+Files to change: backend/login_handler.php
+Hint: Keep it minimal. A login flag, user id, and username are enough for this assignment level.
+Suggested commit: feat: create session after successful login
 
-What I would focus on if I were you:
+STEP 17: Redirect valid login to the secure page
+Goal: Finish the success path.
+Files to change: backend/login_handler.php, templates/dashboard.php
+Hint: Pick one secure page as the landing page after login. Your dashboard is the obvious choice in this project.
+Suggested commit: feat: redirect successful login to dashboard
 
-1. Get the database connection working
-2. Save a registered user into the database
-3. Check login against the database
-4. Keep sessions working
-5. Add one simple cookie
-6. Remove unneeded junk before submission
+--------------------------------------------------
+PHASE 4: SECURE PAGES, LOGOUT, COOKIES
+--------------------------------------------------
 
-What you probably do NOT need right now:
+STEP 18: Protect the secure pages with a session check
+Goal: Stop users opening protected pages by typing the URL directly.
+Files to change: templates/dashboard.php, templates/profile.php, templates/create_post.php, templates/marketplace.php
+Hint: Start with dashboard first. Once it works, repeat the same idea on the other secure pages.
+Suggested commit: feat: protect secure pages with login session
 
-- search
-- marketplace functionality
-- create post functionality
-- full profile editing
-- advanced UI extras
+STEP 19: Build a basic logout flow
+Goal: Let the user end the session properly.
+Files to change: backend/logout.php
+Hint: Logging out should clear session data, destroy the active session, and remove any login-related cookie if you created one.
+Suggested commit: feat: add logout flow
 
-What should probably NOT go into the final zip:
+STEP 20: Add one small extra and then test everything
+Goal: Finish the assignment requirements without overbuilding.
+Files to check: whole project
+Hint: The easiest extra feature is usually a simple cookie, such as remembering the last email used or showing a welcome-back message. Then test every route from start to finish.
+Suggested commit: feat: add small extra feature and complete testing
 
-- throwaway_debug folder
-- .vscode folder
-- lecture notes
-- details folder
-- any temporary test files
-- scripts/start-php-preview.ps1 if you are not using it for the website itself
+--------------------------------------------------
+WHAT "PHP FILTERS" MEANS
+--------------------------------------------------
 
-What should go into the final zip:
+For this assignment, keep it very basic:
+- Use PHP's built-in filter for checking whether an email looks valid.
+- You do not need anything fancy.
+- This is usually just one validation step in the login or registration process.
 
-- .php files
-- .css files
-- .js files
-- required images/assets
+--------------------------------------------------
+WHAT COUNTS AS XSS PREVENTION HERE
+--------------------------------------------------
 
-Minimum "extra feature" suggestion:
+At this level, the safest simple rule is:
+- Clean input when you receive it.
+- Escape output when you display it.
+- Any value shown back on the page, such as an error message, username, or old form value, should be treated carefully.
 
-- Keep register.php as the extra feature
-- That is probably the easiest option because it already exists
+--------------------------------------------------
+FEATURES OFTEN MISSING FROM EARLIER ASSIGNMENTS
+--------------------------------------------------
 
-Short version:
+If your teacher says "features missing from previous assignments", it usually means things like:
+- Proper server-side validation, not just HTML required fields
+- Escaping output to reduce XSS risk
+- Using sessions for login state and messages
+- Redirecting after success or failure
+- Protecting secure pages from direct access
+- Logging out properly
+- Using prepared statements for database work
+- Using hashed passwords instead of plain text
 
-- Keep the current forms
-- wire register to the database
-- wire login to the database
-- keep sessions
-- add one cookie
-- test the redirects
-- clean the zip before submission
+--------------------------------------------------
+FINAL TEST CHECKLIST
+--------------------------------------------------
+
+Before you call it done, test these one by one:
+- Submit the form with both fields empty
+- Submit with email only
+- Submit with password only
+- Submit with an invalid email format
+- Submit with an email that is not in the database
+- Submit with a correct email but wrong password
+- Submit with correct login details
+- Try opening dashboard without logging in
+- Log in and then open the secure pages
+- Log out and try going back to the secure page again
+
+--------------------------------------------------
+MINIMUM REQUIREMENTS COVERED BY THIS GUIDE
+--------------------------------------------------
+
+1. Server-side form validation: Steps 8 to 12
+2. XSS prevention basics: Steps 4 and 11, plus output checks on the pages
+3. Sessions: Steps 3, 11, 16, 18, 19
+4. Redirects: Steps 12, 17, 18, 19
+5. Login success and failure handling: Steps 13 to 17
+6. Logout: Step 19
+7. Cookies: Step 20
+8. PHP filters: Step 10
+9. Extra feature: Step 20
+
+If you get stuck, do not jump ahead. Finish one step, test it, commit it, then continue.

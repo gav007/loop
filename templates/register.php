@@ -1,43 +1,3 @@
-<?php
-session_start();
-
-$usernameErr = "";
-$emailErr = "";
-$passwordErr = "";
-$confirmPasswordErr = "";
-$username = "";
-$email = "";
-
-if (isset($_SESSION["registerUsernameErr"])) {
-    $usernameErr = $_SESSION["registerUsernameErr"];
-    unset($_SESSION["registerUsernameErr"]);
-}
-
-if (isset($_SESSION["registerEmailErr"])) {
-    $emailErr = $_SESSION["registerEmailErr"];
-    unset($_SESSION["registerEmailErr"]);
-}
-
-if (isset($_SESSION["registerPasswordErr"])) {
-    $passwordErr = $_SESSION["registerPasswordErr"];
-    unset($_SESSION["registerPasswordErr"]);
-}
-
-if (isset($_SESSION["registerConfirmPasswordErr"])) {
-    $confirmPasswordErr = $_SESSION["registerConfirmPasswordErr"];
-    unset($_SESSION["registerConfirmPasswordErr"]);
-}
-
-if (isset($_SESSION["registerUsername"])) {
-    $username = $_SESSION["registerUsername"];
-    unset($_SESSION["registerUsername"]);
-}
-
-if (isset($_SESSION["registerEmail"])) {
-    $email = $_SESSION["registerEmail"];
-    unset($_SESSION["registerEmail"]);
-}
-?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -94,7 +54,7 @@ if (isset($_SESSION["registerEmail"])) {
           <!--card 2 form-->
           <div class="card">
             <h1>Create Your Loop Account</h1>
-            <!-- PHP PLACEHOLDER: form should submit to register_handler.php -->
+            <!-- Backend can add register validation messages here later. -->
             <form
               name="myForm"
               onsubmit="return validatePassword();"
@@ -108,11 +68,10 @@ if (isset($_SESSION["registerEmail"])) {
                   type="text"
                   id="username"
                   name="username"
-                  value="<?php echo htmlspecialchars($username); ?>"
                   placeholder="e.g. tud123/StudentName"
                   required
                 />
-                <p class="hero-copy"><?php echo htmlspecialchars($usernameErr); ?></p>
+                <p class="hero-copy"></p>
               </div>
 
               <div class="field-group">
@@ -122,11 +81,10 @@ if (isset($_SESSION["registerEmail"])) {
                   type="email"
                   id="email"
                   name="email"
-                  value="<?php echo htmlspecialchars($email); ?>"
                   placeholder="Enter your Loop email"
                   required
                 />
-                <p class="hero-copy"><?php echo htmlspecialchars($emailErr); ?></p>
+                <p class="hero-copy"></p>
               </div>
 
               <div class="field-group">
@@ -140,7 +98,7 @@ if (isset($_SESSION["registerEmail"])) {
                   required
                   minlength="8"
                 />
-                <p class="hero-copy"><?php echo htmlspecialchars($passwordErr); ?></p>
+                <p class="hero-copy"></p>
               </div>
 
               <div class="field-group">
@@ -153,7 +111,7 @@ if (isset($_SESSION["registerEmail"])) {
                   placeholder="Confirm password"
                   required
                 />
-                <p class="hero-copy"><?php echo htmlspecialchars($confirmPasswordErr); ?></p>
+                <p class="hero-copy"></p>
               </div>
 
               <button class="btn-submit" type="submit" id="reg-submit">Create Account</button>

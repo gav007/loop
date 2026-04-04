@@ -1,18 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION["login"]) || $_SESSION["login"] != 1) {
-    $_SESSION["loginError"] = "You must be logged in to view this page.";
-    header("Location: login_page.php");
-    exit();
-}
-
-$username = "";
-
-if (isset($_SESSION["username"])) {
-    $username = $_SESSION["username"];
-}
-?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -63,8 +48,7 @@ if (isset($_SESSION["username"])) {
           <section class="card main-content">
             <h1>Dashboard</h1>
             <p>
-              Welcome back, <?php echo htmlspecialchars($username); ?>. A simple feed for buying, selling, and trading used
-              electronics.
+              Welcome back. A simple feed for buying, selling, and trading used electronics.
             </p>
 
             <h3>Quick Actions</h3>

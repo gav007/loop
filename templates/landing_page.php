@@ -1,37 +1,3 @@
-<?php
-session_start();
-
-$emailErr = "";
-$passwordErr = "";
-$email = "";
-$loginMessage = "";
-$loginError = "";
-
-if (isset($_SESSION["loginEmailErr"])) {
-    $emailErr = $_SESSION["loginEmailErr"];
-    unset($_SESSION["loginEmailErr"]);
-}
-
-if (isset($_SESSION["loginPasswordErr"])) {
-    $passwordErr = $_SESSION["loginPasswordErr"];
-    unset($_SESSION["loginPasswordErr"]);
-}
-
-if (isset($_SESSION["loginEmail"])) {
-    $email = $_SESSION["loginEmail"];
-    unset($_SESSION["loginEmail"]);
-}
-
-if (isset($_SESSION["loginMessage"])) {
-    $loginMessage = $_SESSION["loginMessage"];
-    unset($_SESSION["loginMessage"]);
-}
-
-if (isset($_SESSION["loginError"])) {
-    $loginError = $_SESSION["loginError"];
-    unset($_SESSION["loginError"]);
-}
-?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -84,14 +50,7 @@ if (isset($_SESSION["loginError"])) {
           <!--card 2 form-->
           <div class="card">
             <h1>Sign In to Loop</h1>
-            <!-- PHP PLACEHOLDER: form should submit to login_handler.php -->
-            <?php if ($loginMessage != "") { ?>
-              <p class="hero-copy"><?php echo htmlspecialchars($loginMessage); ?></p>
-            <?php } ?>
-
-            <?php if ($loginError != "") { ?>
-              <p class="hero-copy"><?php echo htmlspecialchars($loginError); ?></p>
-            <?php } ?>
+            <!-- Backend can add login success or error messages here later. -->
 
             <form action="../backend/login_handler.php" method="post">
               <div class="field-group">
@@ -101,11 +60,10 @@ if (isset($_SESSION["loginError"])) {
                   type="email"
                   id="email"
                   name="email"
-                  value="<?php echo htmlspecialchars($email); ?>"
                   placeholder="Enter your Loop email"
                   required
                 />
-                <p class="hero-copy"><?php echo htmlspecialchars($emailErr); ?></p>
+                <p class="hero-copy"></p>
               </div>
 
               <div class="field-group">
@@ -118,7 +76,7 @@ if (isset($_SESSION["loginError"])) {
                   placeholder="Enter password"
                   required
                 />
-                <p class="hero-copy"><?php echo htmlspecialchars($passwordErr); ?></p>
+                <p class="hero-copy"></p>
               </div>
 
               <button class="btn-submit" type="submit">Sign In</button>
