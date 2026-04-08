@@ -1,3 +1,12 @@
+
+<?php
+session_start();
+if (!isset($_SESSION['login']) || $_SESSION['login'] != 1) {
+    header("Location: landing_page.php");
+    exit();
+}
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -48,6 +57,14 @@
           <section class="card main-content">
             <h1>Dashboard</h1>
             <p>
+              Welcome
+              <?php
+              if (isset($_SESSION['registered_username'])) {
+                  echo $_SESSION['registered_username'];
+              }
+              ?>
+            </p>
+            <p>
               Welcome back. A simple feed for buying, selling, and trading used electronics.
             </p>
 
@@ -59,15 +76,10 @@
           </section>
         </div>
 
-        <!--USE PHP HERE TO INJECT LATEST POSTS FROM THE DATABASE-->
         <div class="main-row">
           <section class="card">
             <h2>Recent Posts</h2>
-
-            <!-- PHP PLACEHOLDER: -->
-            <h3>[PHP: post_title]</h3>
-            <p>[PHP: post_excerpt]</p>
-            <p>[PHP: post_owner] | [PHP: post_date]</p>
+            <p>No posts to show yet.</p>
           </section>
         </div>
       </div>

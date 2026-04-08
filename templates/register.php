@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,8 +13,7 @@
 
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto:wght@400;500;700&family=Poppins:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=Sora:wght@600;700&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet"/>
 
     <link rel="stylesheet" href="../styles/style.css" />
   </head>
@@ -117,6 +120,19 @@
               <button class="btn-submit" type="submit" id="reg-submit">Create Account</button>
               <p id="notice"></p>
             </form>
+
+            <?php
+            if (isset($_SESSION["error"])) {
+              print($_SESSION["error"]);
+              unset($_SESSION["error"]);
+            }
+
+            if (isset($_SESSION["success"])) {
+              print($_SESSION["success"]);
+              unset($_SESSION["success"]);
+            }
+            ?>
+
           </div>
         </div>
       </div>

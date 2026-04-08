@@ -1,3 +1,8 @@
+ 
+<?php
+session_start();
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -50,7 +55,18 @@
           <!--card 2 form-->
           <div class="card">
             <h1>Sign In to Loop</h1>
-            <!-- Backend can add login success or error messages here later. -->
+
+            <?php
+            if (isset($_SESSION["error"])) {
+              echo "<p>" . $_SESSION["error"] . "</p>";
+              unset($_SESSION["error"]);
+            }
+
+            if (isset($_SESSION["success"])) {
+              echo "<p>" . $_SESSION["success"] . "</p>";
+              unset($_SESSION["success"]);
+            }
+            ?>
 
             <form action="../backend/login_handler.php" method="post">
               <div class="field-group">
@@ -61,6 +77,7 @@
                   id="email"
                   name="email"
                   placeholder="Enter your Loop email"
+                  value="<?php if (isset($_COOKIE['user_email'])) echo $_COOKIE['user_email']; ?>"
                   required
                 />
                 <p class="hero-copy"></p>
