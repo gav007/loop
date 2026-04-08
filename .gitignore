@@ -2,3 +2,4 @@
 .vscode/
 LOGIN_DETAILS.txt
 backend/db.local.php
+debug.log
