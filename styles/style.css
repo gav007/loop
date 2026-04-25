@@ -20,6 +20,14 @@ Use for: backup body font OR small utility text like footer, timestamps, meta te
 * {
   box-sizing: border-box;
 }
+
+input,
+select,
+textarea,
+button {
+  font-family: "Inter", sans-serif;
+}
+
 header {
   background-color: #3b5998;
   transition: all 1s;
@@ -30,6 +38,7 @@ header .wrap {
   justify-content: space-between;
   align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .brand {
@@ -56,8 +65,8 @@ header .wrap {
   font-family: "Poppins", sans-serif;
   display: inline-block;
   padding: 10px 14px;
-  border-radius: 999px;
-  font-size: 12px;
+  border-radius: 12px;
+  font-size: 16px;
   font-weight: 700;
   text-decoration: none;
   border: 2px solid transparent;
@@ -71,6 +80,18 @@ header .wrap {
 .home-variant:hover {
   transform: translateY(-1px);
 }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .home-variant {
+    white-space: nowrap;
+    text-align: center;
+  }
 
 .home-variant-outline {
   background: transparent;
@@ -129,7 +150,7 @@ main {
 form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   transition: all 1s;
 }
 
@@ -142,12 +163,12 @@ form {
 /* REPORT: Wireframe (desktop) uses the two-column .main-row layout. */
 
 .card {
-  margin-top: 75px;
+  margin-top: 30px;
 
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  padding: 28px;
+  border-radius: 12px;
+  padding: 26px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
   flex: 1;
   overflow: hidden;
@@ -157,6 +178,8 @@ form {
 .card h1 {
   color: #2f477a;
   text-align: center;
+  margin-top: 0;
+  margin-bottom: 18px;
   transition: all 1s;
 }
 
@@ -171,8 +194,8 @@ form {
 .field-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 6px;
   transition: all 1s;
 }
 
@@ -183,12 +206,17 @@ form {
 
 .field {
   width: 100%;
-  padding: 16px;
+  padding: 14px;
   border: 1px solid #bbb;
   border-radius: 12px;
   outline: none;
   background-color: #f4f2f2;
+  font-size: 15px;
   transition: all 1s;
+}
+
+.field-group .hero-copy {
+  display: none;
 }
 
 .hero-logo {
@@ -200,7 +228,7 @@ form {
 
 .img-panel {
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 12px;
   padding: 12px;
   display: flex;
   justify-content: center;
@@ -224,7 +252,7 @@ form {
   margin: 10px 8px;
   line-height: 1.7;
   color: #334a78;
-  font-size: 12px;
+  font-size: 16px;
   text-align: center;
   transition: all 1s;
 }
@@ -257,6 +285,10 @@ form {
   transition: all 1s;
 }
 
+form .btn-submit {
+  margin-top: 45px;
+}
+
 .btn-submit:hover {
   background: #2f477a;
   color: #ffffff;
@@ -268,6 +300,7 @@ form {
 }
 
 button {
+  font-family: "Poppins", sans-serif;
   padding: 12px 16px;
   border: 0;
   border-radius: 12px;
@@ -297,16 +330,28 @@ footer .wrap {
   padding: 16px;
 }
 
-@media (max-width: 700px) {
-  header .wrap {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+ @media (max-width: 700px) {
+    header .wrap {
+      flex-direction: column;
+      align-items: stretch;
+    }
 
-  .main-row {
-    flex-direction: column;
+    .brand {
+      justify-content: center;
+    }
+
+    .header-actions {
+      width: 100%;
+    }
+
+    .header-actions .home-variant {
+      flex: 1;
+    }
+
+    .main-row {
+      flex-direction: column;
+    }
   }
-}
 
 /* dark theme with some javaScript */
 
@@ -338,6 +383,11 @@ footer .wrap {
 .dark-theme .hero-tagline {
   background-color: transparent;
   color: white;
+}
+
+.dark-theme .img-panel {
+  background-color: transparent;
+  padding: 0;
 }
 
 .dark-theme h1,

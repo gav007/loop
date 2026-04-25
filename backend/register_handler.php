@@ -70,10 +70,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     }
 
     include("db_connect.php");
+
+    $safe_username = $conn->real_escape_string($username);
+    $safe_email = $conn->real_escape_string($email);
+
+    $check_email_sql = "SELECT email FROM users WHERE email = '$safe_email' LIMIT 1";
+    $check_email_result = $conn->query($check_email_sql);
+
+    if ($check_email_result->num_rows > 0) {
+        $_SESSION["error"] = "This email is already registered. Please use a different email or log in.";
+        $conn->close();
+        header("Location: ../templates/register.php");
+        exit();
+    }
+
     // hash
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $safe_password = $conn->real_escape_string($hashed_password);
+
     $sql = "INSERT INTO users (username, email, password)
-    VALUES ('$username', '$email', '$hashed_password')";
+    VALUES ('$safe_username', '$safe_email', '$safe_password')";
 
     
     if ($conn->query($sql) === TRUE) {

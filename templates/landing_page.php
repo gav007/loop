@@ -44,7 +44,7 @@ session_start();
           <!--card 1-->
           <div class="card">
             <div class="img-panel">
-              <img src="../assets/loop.png" class="hero-logo" alt="main-logo" />
+              <img src="../assets/loop.png" id="hero-logo" class="hero-logo" alt="main-logo" />
             </div>
             <h2 class="hero-tagline">Give old tech a second life.</h2>
             <p class="hero-copy">

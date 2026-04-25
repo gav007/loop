@@ -1,6 +1,16 @@
 function myFunction() {
   let element = document.body;
   element.classList.toggle("dark-theme");
+
+  let logo = document.getElementById("hero-logo");
+
+  if (logo != null) {
+    if (element.classList.contains("dark-theme")) {
+      logo.src = "../assets/inverted_new2.pgn.png";
+    } else {
+      logo.src = "../assets/loop.png";
+    }
+  }
 }
 
 function validatePassword() {

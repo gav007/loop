@@ -33,7 +33,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != 1) {
           <input type="text" class="field" name="search" placeholder="Search posts" />
           <button class="btn" type="button">Search</button>
         </div>
-        <div style="display: flex; gap: 40px">
+         <div class="header-actions">
           <button class="home-variant home-variant-outline" onclick="myFunction()">
             Toggle dark mode
           </button>

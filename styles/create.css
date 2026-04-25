@@ -21,6 +21,7 @@
     padding: 8px 12px;
     border-radius: 12px;
     color: #2f477a;
+    font-family: "Poppins", sans-serif;
     text-decoration: none;
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
@@ -36,21 +37,26 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: auto;
-    margin-right: 20px;
+    flex: 1;
+    min-width: 260px;
+    max-width: 420px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .search-bar-container input {
-    width: 300px;
+    width: 100%;
     padding: 10px 15px;
     border: 2px solid #593df3;
-    border-radius: 25px;
+    border-radius: 12px;
+    font-family: "Inter", sans-serif;
     font-size: 15px;
 }
 
 .search-bar-container button {
+    font-family: "Poppins", sans-serif;
     padding: 10px 20px;
-    border-radius: 25px;
+    border-radius: 12px;
     background-color: rgb(248, 247, 245);
     color: rgb(118, 118, 119);
     outline: none;
@@ -111,19 +117,33 @@
 
     .sidebar nav h3 a {
         background-color: #e4e6eb;
-        border-radius: 20px;
+        border-radius: 12px;
         padding: 8px 12px;
     }
 
+    .search-bar-container {
+        width: 100%;
+        max-width: none;
+    }
+
     .search-bar-container input {
-        width: 150px;
+        width: 100%;
     }
 }
 
 /* REPORT: Wireframe (phone) adjustments for small screens. */
 @media (max-width: 600px) {
+    .search-bar-container {
+        min-width: 100%;
+    }
+
     .search-bar-container input {
-        width: 100px;
-        font-size: 10px;
+        width: 100%;
+        font-size: 15px;
+    }
+
+    .search-bar-container button {
+        padding: 10px 14px;
+        white-space: nowrap;
     }
 }
