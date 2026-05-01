@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $usernameErr = "Name is required";
     }
     else {
-        $username = clean_data($_POST["username"]);
+        $username = clean_data($_POST["username"]); // stores post method in the variable
     }
 
     if (empty($_POST['email'])) {
@@ -95,7 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     if ($conn->query($sql) === TRUE) {
         $_SESSION["registered_username"] = $username;
         $_SESSION["registered_email"] = $email;
-        $_SESSION["registered_password"] = $password;
         $_SESSION["success"] = "Registration successful. Please log in.";
         $conn ->close();
         header("Location: ../templates/landing_page.php");

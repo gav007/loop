@@ -8,6 +8,7 @@ session_start();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loop | Register</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
@@ -24,7 +25,7 @@ session_start();
           <img src="../assets/favicon.svg" alt="Loop logo" />
           <span class="brand-name">Loop</span>
         </a>
-        <div style="display: flex; gap: 40px">
+        <div class="header-actions">
           <button class="home-variant home-variant-outline" onclick="myFunction()">
             Toggle dark mode
           </button>
@@ -42,15 +43,17 @@ session_start();
             <div class="img-panel">
               <img src="../assets/loop.png" id="hero-logo" class="hero-logo" alt="main-logo" />
             </div>
-            <h2 class="hero-tagline">Give old tech a second life.</h2>
+            <h2 class="hero-tagline">Give campus items a second life.</h2>
             <p class="hero-copy">
-              Loop is a community for selling, swapping, and donating used electronics.
+              Loop is a TU Dublin community for selling, swapping, borrowing, donating, and
+              giving away useful items.
             </p>
             <p class="hero-copy">
-              From Arduino boards to RAM and old consoles, useful devices can stay in use.
+              From books and bikes to records, clothes, furniture, and tech, campus items can
+              stay in use.
             </p>
             <p class="hero-copy">
-              Post clear specs and condition details so others can reuse tech with confidence.
+              Post clear details so other students can reuse things with confidence.
             </p>
           </div>
 
@@ -123,12 +126,12 @@ session_start();
 
             <?php
             if (isset($_SESSION["error"])) {
-              print($_SESSION["error"]);
+              echo '<p class="message message-error">' . htmlspecialchars($_SESSION["error"], ENT_QUOTES, 'UTF-8') . '</p>';
               unset($_SESSION["error"]);
             }
 
             if (isset($_SESSION["success"])) {
-              print($_SESSION["success"]);
+              echo '<p class="message message-success">' . htmlspecialchars($_SESSION["success"], ENT_QUOTES, 'UTF-8') . '</p>';
               unset($_SESSION["success"]);
             }
             ?>

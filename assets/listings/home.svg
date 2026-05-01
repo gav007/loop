@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" role="img" aria-label="Home placeholder">
+  <rect width="640" height="420" fill="#f8f7f5"/>
+  <path d="M176 208 320 98l144 110v126H216V208z" fill="#3b5998"/>
+  <rect x="284" y="238" width="72" height="96" rx="8" fill="#eef2fb"/>
+  <rect x="370" y="230" width="54" height="48" rx="8" fill="#5b7fd6"/>
+</svg>

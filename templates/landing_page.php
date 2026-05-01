@@ -1,6 +1,10 @@
  
 <?php
 session_start();
+
+$remembered_email = isset($_COOKIE['user_email'])
+  ? htmlspecialchars($_COOKIE['user_email'], ENT_QUOTES, 'UTF-8')
+  : "";
 ?>
 
 <!doctype html>
@@ -9,6 +13,7 @@ session_start();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loop | Landing</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
@@ -28,7 +33,7 @@ session_start();
           <img src="../assets/favicon.svg" alt="Loop logo" />
           <span class="brand-name">Loop</span>
         </a>
-        <div style="display: flex; gap: 40px">
+        <div class="header-actions">
           <button class="home-variant home-variant-outline" onclick="myFunction()">
             Toggle dark mode
           </button>
@@ -46,9 +51,10 @@ session_start();
             <div class="img-panel">
               <img src="../assets/loop.png" id="hero-logo" class="hero-logo" alt="main-logo" />
             </div>
-            <h2 class="hero-tagline">Give old tech a second life.</h2>
+            <h2 class="hero-tagline">Give campus items a second life.</h2>
             <p class="hero-copy">
-              Loop helps people sell, swap, and donate used electronics instead of binning them.
+              Loop helps TU Dublin students sell, swap, borrow, donate, and give away useful
+              items across campus.
             </p>
           </div>
 
@@ -58,12 +64,12 @@ session_start();
 
             <?php
             if (isset($_SESSION["error"])) {
-              echo "<p>" . $_SESSION["error"] . "</p>";
+              echo '<p class="message message-error">' . htmlspecialchars($_SESSION["error"], ENT_QUOTES, 'UTF-8') . '</p>';
               unset($_SESSION["error"]);
             }
 
             if (isset($_SESSION["success"])) {
-              echo "<p>" . $_SESSION["success"] . "</p>";
+              echo '<p class="message message-success">' . htmlspecialchars($_SESSION["success"], ENT_QUOTES, 'UTF-8') . '</p>';
               unset($_SESSION["success"]);
             }
             ?>
@@ -77,7 +83,7 @@ session_start();
                   id="email"
                   name="email"
                   placeholder="Enter your Loop email"
-                  value="<?php if (isset($_COOKIE['user_email'])) echo $_COOKIE['user_email']; ?>"
+                  value="<?php echo $remembered_email; ?>"
                   required
                 />
                 <p class="hero-copy"></p>

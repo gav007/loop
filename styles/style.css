@@ -30,7 +30,12 @@ button {
 
 header {
   background-color: #3b5998;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 header .wrap {
@@ -71,27 +76,27 @@ header .wrap {
   text-decoration: none;
   border: 2px solid transparent;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .home-variant:hover {
   transform: translateY(-1px);
 }
 
-  .header-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-  .home-variant {
-    white-space: nowrap;
-    text-align: center;
-  }
+.home-variant {
+  white-space: nowrap;
+  text-align: center;
+}
 
 .home-variant-outline {
   background: transparent;
@@ -110,7 +115,12 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 h1,
@@ -118,7 +128,12 @@ h2,
 h3 {
   font-family: "Poppins", sans-serif;
   color: #2f477a;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 a {
@@ -128,8 +143,8 @@ a {
   text-decoration-color: transparent;
   text-underline-offset: 3px;
   transition:
-    color 0.2s ease,
-    text-decoration-color 0.2s ease;
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
 }
 
 a:hover,
@@ -144,20 +159,35 @@ a:active {
 
 main {
   flex: 1;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .main-row {
   display: flex;
   gap: 16px;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 /* REPORT: Wireframe (desktop) uses the two-column .main-row layout. */
@@ -172,7 +202,12 @@ form {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
   flex: 1;
   overflow: hidden;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .card h1 {
@@ -180,7 +215,12 @@ form {
   text-align: center;
   margin-top: 0;
   margin-bottom: 18px;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .card label {
@@ -188,7 +228,12 @@ form {
   padding: 0;
   color: #111;
   font-weight: 600;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .field-group {
@@ -196,12 +241,22 @@ form {
   flex-direction: column;
   gap: 6px;
   margin-bottom: 6px;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .field-group label {
   color: #2f477a;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .field {
@@ -209,10 +264,20 @@ form {
   padding: 14px;
   border: 1px solid #bbb;
   border-radius: 12px;
-  outline: none;
   background-color: #f4f2f2;
   font-size: 15px;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.field:focus-visible {
+  border-color: #3b5998;
+  box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.18);
+  outline: 2px solid transparent;
 }
 
 .field-group .hero-copy {
@@ -222,7 +287,12 @@ form {
 .hero-logo {
   width: 450px;
   max-width: 100%;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
   transform: rotate(360);
 }
 
@@ -232,7 +302,12 @@ form {
   padding: 12px;
   display: flex;
   justify-content: center;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .hero-tagline {
@@ -245,7 +320,12 @@ form {
   font-size: 18px;
   font-weight: 500;
   color: #2f477a;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .hero-copy {
@@ -254,21 +334,35 @@ form {
   color: #334a78;
   font-size: 16px;
   text-align: center;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .btn {
   font-family: "Poppins", sans-serif;
   display: inline-block;
   padding: 12px 16px;
-  background: #13cf13;
-  color: white;
+  background: #eef2fb;
+  color: #2f477a;
   text-decoration: none;
   border-radius: 12px;
   font-weight: 700;
-  border: 0;
+  border: 1px solid #b7c5e8;
   cursor: pointer;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.btn:visited {
+  color: #2f477a;
 }
 
 .btn-submit {
@@ -282,7 +376,16 @@ form {
   font-weight: 700;
   border: 0;
   cursor: pointer;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.btn-submit:visited {
+  color: #ffffff;
 }
 
 form .btn-submit {
@@ -292,11 +395,14 @@ form .btn-submit {
 .btn-submit:hover {
   background: #2f477a;
   color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .btn:hover {
-  background-color: #1ab51a;
-  color: white;
+  background-color: #dfe7f8;
+  border-color: #91a8da;
+  color: #1f3561;
+  transform: translateY(-1px);
 }
 
 button {
@@ -304,17 +410,114 @@ button {
   padding: 12px 16px;
   border: 0;
   border-radius: 12px;
-  background: #13cf13;
+  background: #3b5998;
   color: white;
   font-weight: 700;
   cursor: pointer;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.btn:focus-visible,
+.btn-submit:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(59, 89, 152, 0.35);
+  outline-offset: 3px;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #5b6f9d;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.message {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.message-error {
+  background: #fff0ef;
+  border: 1px solid #efb4ad;
+  color: #8f251a;
+}
+
+.message-success {
+  background: #eef8ef;
+  border: 1px solid #b9dfbd;
+  color: #235d2a;
+}
+
+.message-info {
+  background: #eef2fb;
+  border: 1px solid #b7c5e8;
+  color: #2f477a;
+}
+
+.form-note {
+  margin: 10px 0 0;
+  color: #5c6b88;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.empty-state {
+  background: #f8f7f5;
+  border: 1px dashed #b7c5e8;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.empty-state h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #43567e;
+  line-height: 1.6;
+  margin-top: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 footer {
   background-color: #3b5998;
   text-align: center;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 footer .wrap {
@@ -325,7 +528,7 @@ footer .wrap {
 }
 
 .wrap {
-  max-width: 900px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 16px;
 }
@@ -357,25 +560,45 @@ footer .wrap {
 
 .dark-theme {
   background-color: #211832;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .dark-theme header {
   background-color: #412b6b;
   color: rgb(255, 255, 255);
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .dark-theme footer {
   background-color: #412b6b;
   color: rgb(255, 255, 255);
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .dark-theme .card {
   background-color: #412b6b;
   color: white;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
   box-shadow: 0 0 25px #5c3e94;
   border: 1px solid #f25912;
 }
@@ -398,26 +621,87 @@ footer .wrap {
 .dark-theme .sidebar h2,
 .dark-theme .sidebar nav h3 a {
   color: white;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .dark-theme .btn-submit {
   background: #f25912;
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.dark-theme .btn {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.dark-theme .btn:visited {
+  color: #ffffff;
+}
+
+.dark-theme .message-success,
+.dark-theme .message-error,
+.dark-theme .message-info {
+  color: #ffffff;
 }
 
 .dark-theme .btn-submit:hover {
   background: #f25912;
   border: 1px solid #ffffff;
+  color: #ffffff;
   cursor: pointer;
 }
 
 .dark-theme .hero-logo {
   transform: rotate(360deg);
-  transition: all 1s;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
+.home-variant,
+.btn,
+.btn-submit,
+button {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.home-variant-outline,
+.home-variant-outline:visited {
+  background: transparent;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.home-variant-outline:hover,
 .home-variant.home-variant-outline:hover {
-  background-color: white;
-  color: #111;
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.btn:visited {
+  color: #2f477a;
+}
+
+.btn-submit:visited {
+  color: #ffffff;
 }

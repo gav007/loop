@@ -1,6 +1,6 @@
 # Loop
 
-Loop is a server-side web development project for buying, selling, swapping, and donating used electronics.
+Loop is a server-side web development project for a TU Dublin circular marketplace where students can sell, swap, borrow, donate, and give away useful second-hand items across campus.
 
 This repository was prepared for **Server-side Web Development COMP3101**  
 **Assignment 2**  
@@ -9,7 +9,7 @@ This repository was prepared for **Server-side Web Development COMP3101**
 
 ## Project Summary
 
-The website includes a landing page, user registration, login, a protected dashboard, logout, and placeholder pages for profile, marketplace, and creating posts.
+The website includes a landing page, user registration, login, protected dashboard, logout, profile interests, real listing creation, and a database-backed marketplace feed.
 
 The aim of the project is to show core PHP lab topics such as:
 
@@ -122,6 +122,11 @@ Example:
 - client-side password confirmation check in `scripts/main.js`
 - reusable layout and styling across multiple pages
 - password hashing during registration with `password_hash()`
+- protected marketplace, create listing, and profile pages
+- database-backed listing creation and marketplace browsing
+- profile interests for simple marketplace personalisation
+- local SVG placeholder images for listing cards
+- basic recommendation sorting based on explicit user interests
 
 ## Features Added Since the Previous Assignment
 
@@ -131,11 +136,41 @@ Example:
 - logout handler
 - session-based success and error messages
 - cookie support for remembered email
+- Phase 1 UI polish for dashboard, marketplace, create listing, and profile pages
+- Phase 2 listing storage using a new `listings` table
+- Phase 2 `user_interests` table and profile interest checkboxes
+- demo listing seed data for testing the marketplace
+- simple recommendation score for the Recommended marketplace sort
+
+## Phase 2 Marketplace Features
+
+Loop has moved from a static prototype into a small database-driven marketplace.
+
+Current Phase 2 behaviour:
+
+- students can create listings from `templates/create_post.php`
+- listings are inserted through `backend/listing_create_handler.php`
+- marketplace cards are rendered from MySQL in `templates/marketplace.php`
+- profile interests are saved through `backend/profile_update_handler.php`
+- `backend/recommendations.php` ranks listings for the Recommended sort
+- if no interests are selected, the marketplace falls back to newest-style browsing
+
+The recommendation score is intentionally simple:
+
+- category match with a user interest
+- free/donation boost if the user selected `Free items`
+- swap listing boost
+- freshness boost for listings created in the last 72 hours
+- small random discovery boost
+
+No click tracking, messaging, payments, notifications, or advanced machine learning are included yet.
 
 ## Project Structure
 
 - `assets/` images and icons
+- `assets/listings/` local SVG placeholder images for marketplace listings
 - `backend/` PHP handlers and database connection
+- `database/` SQL setup and demo seed data
 - `scripts/` JavaScript files
 - `styles/` CSS files
 - `templates/` website pages
@@ -155,11 +190,28 @@ Example:
 2. Start Apache and MySQL in XAMPP.
 3. Create the database `loop_db`.
 4. Create a `users` table for registration/login.
-5. Open the project in the browser through localhost.
+5. Run the Phase 2 SQL setup files.
+6. Open the project in the browser through localhost.
 
 Example:
 
 `http://localhost/loop/loop/`
+
+### Phase 2 SQL Setup
+
+Run these after creating the original `users` table:
+
+```bash
+mysql -u gav -padmin loop_db < database/phase2_loop_tables.sql
+mysql -u gav -padmin loop_db < database/seed_demo_listings.sql
+```
+
+The setup file creates:
+
+- `listings`
+- `user_interests`
+
+The seed file adds realistic demo listings across TU Dublin campuses so the marketplace can be tested immediately.
 
 ## Main Files
 
@@ -168,10 +220,26 @@ Example:
 - `backend/login_handler.php`
 - `backend/logout.php`
 - `backend/db_connect.php`
+- `backend/listing_create_handler.php`
+- `backend/profile_update_handler.php`
+- `backend/recommendations.php`
 - `templates/landing_page.php`
 - `templates/register.php`
 - `templates/dashboard.php`
+- `templates/marketplace.php`
+- `templates/create_post.php`
+- `templates/profile.php`
+- `database/phase2_loop_tables.sql`
+- `database/seed_demo_listings.sql`
 - `scripts/main.js`
+
+## Current Limitations
+
+- Listing image upload is not implemented yet; listings use safe local placeholders.
+- Save buttons are placeholders.
+- Profile editing currently focuses on interests, not full account updates.
+- Recommended sorting only uses explicit interests, listing type, freshness, and a small discovery boost.
+- Behaviour tracking such as views, saves, messages, claims, and hidden listings is planned for a later phase.
 
 ## Note for Submission
 
