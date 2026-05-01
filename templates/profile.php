@@ -17,11 +17,17 @@ require_once("../backend/recommendations.php");
 
 $user_id = loop_user_id();
 $selected_interests = loop_get_user_interests($conn, $user_id);
+$saved_listing_count = loop_get_saved_listing_count($conn, $user_id);
+$recent_saved_listings = loop_get_recent_saved_listings($conn, $user_id, 4);
 $conn->close();
 
 $profile_error = $_SESSION['profile_error'] ?? "";
 $success = $_SESSION['success'] ?? "";
 unset($_SESSION['profile_error'], $_SESSION['success']);
+
+function profile_text($value) {
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
 ?>
 
 <!doctype html>
@@ -132,6 +138,41 @@ unset($_SESSION['profile_error'], $_SESSION['success']);
                 Account editing can be expanded later. This phase saves interests only.
               </p>
             </form>
+
+            <section class="profile-saved-preview">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Saved items</p>
+                  <h2>Your Saved Listings</h2>
+                </div>
+                <span class="status-pill"><?php echo (int) $saved_listing_count; ?> saved</span>
+              </div>
+
+              <?php if (empty($recent_saved_listings)) { ?>
+                <div class="empty-state">
+                  <h3>No saved items yet.</h3>
+                  <p>Save listings from the marketplace to come back to them later and help Loop learn what you like.</p>
+                  <a class="btn" href="marketplace.php">Browse Marketplace</a>
+                </div>
+              <?php } else { ?>
+                <ul class="saved-listing-list">
+                  <?php foreach ($recent_saved_listings as $saved_listing) { ?>
+                    <li class="saved-listing-item">
+                      <a href="listing_detail.php?id=<?php echo (int) $saved_listing['id']; ?>">
+                        <strong><?php echo profile_text($saved_listing['title']); ?></strong>
+                        <span>
+                          <?php echo profile_text($saved_listing['category']); ?>
+                          &middot; <?php echo profile_text(loop_pretty_listing_type($saved_listing['listing_type'])); ?>
+                          &middot; <?php echo profile_text(loop_display_price($saved_listing)); ?>
+                          &middot; <?php echo profile_text($saved_listing['campus']); ?>
+                        </span>
+                      </a>
+                    </li>
+                  <?php } ?>
+                </ul>
+                <a class="btn" href="marketplace.php">Find More Listings</a>
+              <?php } ?>
+            </section>
           </section>
         </div>
       </div>

@@ -2,3 +2,5 @@
 LOGIN_DETAILS.txt
 backend/db.local.php
 debug.log
+uploads/listings/*
+!uploads/listings/.gitkeep

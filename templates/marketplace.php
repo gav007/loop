@@ -10,8 +10,11 @@ require_once("../backend/recommendations.php");
 
 $user_id = loop_user_id();
 $user_interests = loop_get_user_interests($conn, $user_id);
+$saved_listing_ids = loop_get_saved_listing_ids($conn, $user_id);
+$saved_category_preferences = loop_get_saved_category_preferences($conn, $user_id);
 $success = $_SESSION['success'] ?? "";
-unset($_SESSION['success']);
+$listing_error = $_SESSION['listing_error'] ?? "";
+unset($_SESSION['success'], $_SESSION['listing_error']);
 
 $search = trim($_GET['search'] ?? "");
 $category = trim($_GET['category'] ?? "");
@@ -20,6 +23,11 @@ $condition = trim($_GET['condition'] ?? "");
 $price_filter = trim($_GET['price'] ?? "");
 $campus = trim($_GET['campus'] ?? "");
 $sort = trim($_GET['sort'] ?? "recommended");
+$marketplace_redirect = "marketplace.php";
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $marketplace_redirect .= "?" . $_SERVER['QUERY_STRING'];
+}
+$has_personalisation = !empty($user_interests) || !empty($saved_category_preferences);
 
 $where = ["status = 'active'"];
 $params = [];
@@ -91,15 +99,15 @@ if ($stmt) {
     $result = $stmt->get_result();
 
     while ($row = $result->fetch_assoc()) {
-        $row['recommendation_score'] = loop_score_listing($row, $user_interests);
-        $row['recommendation_reason'] = loop_recommendation_reason($row, $user_interests);
+        $row['recommendation_score'] = loop_score_listing($row, $user_interests, $saved_category_preferences);
+        $row['recommendation_reason'] = loop_recommendation_reason($row, $user_interests, $saved_category_preferences);
         $listings[] = $row;
     }
 
     $stmt->close();
 }
 
-if ($sort === "recommended" && !empty($user_interests)) {
+if ($sort === "recommended" && $has_personalisation) {
     usort($listings, function ($a, $b) {
         if ($a['recommendation_score'] === $b['recommendation_score']) {
             return strtotime($b['created_at']) <=> strtotime($a['created_at']);
@@ -279,10 +287,10 @@ function loop_excerpt($value, $length = 130) {
             </div>
 
             <p class="form-note">
-              <?php if (empty($user_interests)) { ?>
-                Choose interests in your profile to personalise your marketplace.
+              <?php if (!$has_personalisation) { ?>
+                Choose interests or save items to personalise your marketplace.
               <?php } else { ?>
-                Recommended sorting is using your profile interests.
+                Recommended sorting is using your profile interests and saved items.
               <?php } ?>
             </p>
           </form>
@@ -292,6 +300,9 @@ function loop_excerpt($value, $length = 130) {
           <?php if ($success !== "") { ?>
             <p class="message message-success"><?php echo safe_text($success); ?></p>
           <?php } ?>
+          <?php if ($listing_error !== "") { ?>
+            <p class="message message-error"><?php echo safe_text($listing_error); ?></p>
+          <?php } ?>
           <div class="section-heading">
             <div>
               <p class="eyebrow">Feed</p>
@@ -300,13 +311,13 @@ function loop_excerpt($value, $length = 130) {
             <span class="status-pill"><?php echo $listing_count; ?> listings</span>
           </div>
 
-          <?php if (empty($user_interests)) { ?>
+          <?php if (!$has_personalisation) { ?>
           <div class="marketplace-feed-hints">
             <div class="empty-state">
               <h3>Recommended listings will appear here.</h3>
               <p>
-                Choose interests in your profile and the Recommended sort will lift matching
-                categories and free items.
+                Choose interests in your profile or save items and the Recommended sort will
+                lift matching categories.
               </p>
             </div>
             <div class="empty-state">
@@ -320,20 +331,46 @@ function loop_excerpt($value, $length = 130) {
 
           <div class="listing-grid" aria-label="Marketplace listing results">
             <?php foreach ($listings as $listing) { ?>
+              <?php $is_saved = isset($saved_listing_ids[(int) $listing['id']]); ?>
               <article class="listing-card">
-                <div class="listing-card-media">
-                  <?php if (!empty($listing['image_path'])) { ?>
-                    <img src="<?php echo safe_text($listing['image_path']); ?>" alt="" />
-                  <?php } ?>
-                </div>
+                <a class="listing-card-link" href="listing_detail.php?id=<?php echo (int) $listing['id']; ?>" aria-label="View <?php echo safe_text($listing['title']); ?>">
+                  <div class="listing-card-media">
+                    <?php if (!empty($listing['image_path'])) { ?>
+                      <img
+                        src="<?php echo safe_text($listing['image_path']); ?>"
+                        alt="Image for <?php echo safe_text($listing['title']); ?>"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    <?php } ?>
+                  </div>
+                </a>
                 <div class="listing-card-body">
                   <div class="listing-meta-row">
                     <span class="listing-type-badge">
                       <?php echo safe_text(loop_pretty_listing_type($listing['listing_type'])); ?>
                     </span>
-                    <button class="listing-save-placeholder" type="button" disabled>Save soon</button>
+                    <span class="status-pill status-<?php echo safe_text($listing['status']); ?>">
+                      <?php echo safe_text(ucfirst($listing['status'])); ?>
+                    </span>
+                    <form class="save-listing-form" action="../backend/saved_listing_handler.php" method="post">
+                      <input type="hidden" name="listing_id" value="<?php echo (int) $listing['id']; ?>" />
+                      <input type="hidden" name="action" value="<?php echo $is_saved ? "unsave" : "save"; ?>" />
+                      <input type="hidden" name="redirect" value="<?php echo safe_text($marketplace_redirect); ?>" />
+                      <button
+                        class="listing-save-button<?php echo $is_saved ? " is-saved" : ""; ?>"
+                        type="submit"
+                        aria-pressed="<?php echo $is_saved ? "true" : "false"; ?>"
+                      >
+                        <?php echo $is_saved ? "Saved" : "Save"; ?>
+                      </button>
+                    </form>
                   </div>
-                  <h3><?php echo safe_text($listing['title']); ?></h3>
+                  <h3>
+                    <a class="listing-title-link" href="listing_detail.php?id=<?php echo (int) $listing['id']; ?>">
+                      <?php echo safe_text($listing['title']); ?>
+                    </a>
+                  </h3>
                   <dl class="listing-details">
                     <div>
                       <dt>Category</dt>
@@ -361,6 +398,9 @@ function loop_excerpt($value, $length = 130) {
                       <?php echo safe_text($listing['recommendation_reason']); ?>
                     </p>
                   <?php } ?>
+                  <a class="btn listing-view-link" href="listing_detail.php?id=<?php echo (int) $listing['id']; ?>">
+                    View Details
+                  </a>
                 </div>
               </article>
             <?php } ?>

@@ -7,7 +7,16 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != 1) {
 
 $listing_error = $_SESSION['listing_error'] ?? "";
 $success = $_SESSION['success'] ?? "";
-unset($_SESSION['listing_error'], $_SESSION['success']);
+$old_input = $_SESSION['listing_old'] ?? [];
+unset($_SESSION['listing_error'], $_SESSION['success'], $_SESSION['listing_old']);
+
+function old_value($field, $old_input) {
+    return htmlspecialchars((string) ($old_input[$field] ?? ""), ENT_QUOTES, 'UTF-8');
+}
+
+function old_selected($field, $value, $old_input) {
+    return isset($old_input[$field]) && $old_input[$field] === $value ? " selected" : "";
+}
 ?>
 
 <!doctype html>
@@ -81,6 +90,7 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                   name="listing-title"
                   class="field"
                   placeholder="e.g. textbook bundle, vinyl records, desk lamp"
+                  value="<?php echo old_value('listing-title', $old_input); ?>"
                   required
                 />
               </div>
@@ -89,20 +99,20 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                 <label for="listing-category">Category</label>
                 <select class="field" id="listing-category" name="listing-category" required>
                   <option value="">Select a category</option>
-                  <option value="Books">Books</option>
-                  <option value="Course materials">Course materials</option>
-                  <option value="Tech &amp; electronics">Tech &amp; electronics</option>
-                  <option value="Clothes">Clothes</option>
-                  <option value="Furniture">Furniture</option>
-                  <option value="Kitchen &amp; home">Kitchen &amp; home</option>
-                  <option value="Bikes &amp; scooters">Bikes &amp; scooters</option>
-                  <option value="Music, CDs &amp; vinyl">Music, CDs &amp; vinyl</option>
-                  <option value="Instruments &amp; audio gear">Instruments &amp; audio gear</option>
-                  <option value="Sports &amp; outdoor">Sports &amp; outdoor</option>
-                  <option value="Art &amp; design supplies">Art &amp; design supplies</option>
-                  <option value="Tools &amp; DIY">Tools &amp; DIY</option>
-                  <option value="Gaming">Gaming</option>
-                  <option value="Other">Other</option>
+                  <option value="Books"<?php echo old_selected('listing-category', 'Books', $old_input); ?>>Books</option>
+                  <option value="Course materials"<?php echo old_selected('listing-category', 'Course materials', $old_input); ?>>Course materials</option>
+                  <option value="Tech &amp; electronics"<?php echo old_selected('listing-category', 'Tech & electronics', $old_input); ?>>Tech &amp; electronics</option>
+                  <option value="Clothes"<?php echo old_selected('listing-category', 'Clothes', $old_input); ?>>Clothes</option>
+                  <option value="Furniture"<?php echo old_selected('listing-category', 'Furniture', $old_input); ?>>Furniture</option>
+                  <option value="Kitchen &amp; home"<?php echo old_selected('listing-category', 'Kitchen & home', $old_input); ?>>Kitchen &amp; home</option>
+                  <option value="Bikes &amp; scooters"<?php echo old_selected('listing-category', 'Bikes & scooters', $old_input); ?>>Bikes &amp; scooters</option>
+                  <option value="Music, CDs &amp; vinyl"<?php echo old_selected('listing-category', 'Music, CDs & vinyl', $old_input); ?>>Music, CDs &amp; vinyl</option>
+                  <option value="Instruments &amp; audio gear"<?php echo old_selected('listing-category', 'Instruments & audio gear', $old_input); ?>>Instruments &amp; audio gear</option>
+                  <option value="Sports &amp; outdoor"<?php echo old_selected('listing-category', 'Sports & outdoor', $old_input); ?>>Sports &amp; outdoor</option>
+                  <option value="Art &amp; design supplies"<?php echo old_selected('listing-category', 'Art & design supplies', $old_input); ?>>Art &amp; design supplies</option>
+                  <option value="Tools &amp; DIY"<?php echo old_selected('listing-category', 'Tools & DIY', $old_input); ?>>Tools &amp; DIY</option>
+                  <option value="Gaming"<?php echo old_selected('listing-category', 'Gaming', $old_input); ?>>Gaming</option>
+                  <option value="Other"<?php echo old_selected('listing-category', 'Other', $old_input); ?>>Other</option>
                 </select>
               </div>
 
@@ -110,12 +120,12 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                 <label for="listing-type">Listing Type</label>
                 <select class="field" id="listing-type" name="listing-type" required>
                   <option value="">Select listing type</option>
-                  <option value="sell">Sell</option>
-                  <option value="swap">Swap</option>
-                  <option value="free">Free</option>
-                  <option value="donation">Donation</option>
-                  <option value="wanted">Wanted</option>
-                  <option value="borrow">Borrow</option>
+                  <option value="sell"<?php echo old_selected('listing-type', 'sell', $old_input); ?>>Sell</option>
+                  <option value="swap"<?php echo old_selected('listing-type', 'swap', $old_input); ?>>Swap</option>
+                  <option value="free"<?php echo old_selected('listing-type', 'free', $old_input); ?>>Free</option>
+                  <option value="donation"<?php echo old_selected('listing-type', 'donation', $old_input); ?>>Donation</option>
+                  <option value="wanted"<?php echo old_selected('listing-type', 'wanted', $old_input); ?>>Wanted</option>
+                  <option value="borrow"<?php echo old_selected('listing-type', 'borrow', $old_input); ?>>Borrow</option>
                 </select>
               </div>
 
@@ -123,10 +133,10 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                 <label for="listing-condition">Condition</label>
                 <select class="field" id="listing-condition" name="listing-condition" required>
                   <option value="">Select condition</option>
-                  <option value="New">New</option>
-                  <option value="Good">Good</option>
-                  <option value="Fair">Fair</option>
-                  <option value="Needs repair">Needs repair</option>
+                  <option value="New"<?php echo old_selected('listing-condition', 'New', $old_input); ?>>New</option>
+                  <option value="Good"<?php echo old_selected('listing-condition', 'Good', $old_input); ?>>Good</option>
+                  <option value="Fair"<?php echo old_selected('listing-condition', 'Fair', $old_input); ?>>Fair</option>
+                  <option value="Needs repair"<?php echo old_selected('listing-condition', 'Needs repair', $old_input); ?>>Needs repair</option>
                 </select>
               </div>
 
@@ -139,7 +149,7 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                   rows="7"
                   placeholder="Include condition, collection details, what you want in return, and anything a student should know."
                   required
-                ></textarea>
+                ><?php echo old_value('listing-description', $old_input); ?></textarea>
               </div>
 
               <div class="field-group">
@@ -150,6 +160,7 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                   id="listing-price"
                   name="listing-price"
                   placeholder="e.g. EUR 20, free, swap for books, borrow for one week"
+                  value="<?php echo old_value('listing-price', $old_input); ?>"
                 />
               </div>
 
@@ -157,11 +168,11 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                 <label for="listing-campus">Campus</label>
                 <select class="field" id="listing-campus" name="listing-campus" required>
                   <option value="">Select campus</option>
-                  <option value="Grangegorman">Grangegorman</option>
-                  <option value="Aungier Street">Aungier Street</option>
-                  <option value="Bolton Street">Bolton Street</option>
-                  <option value="Blanchardstown">Blanchardstown</option>
-                  <option value="Tallaght">Tallaght</option>
+                  <option value="Grangegorman"<?php echo old_selected('listing-campus', 'Grangegorman', $old_input); ?>>Grangegorman</option>
+                  <option value="Aungier Street"<?php echo old_selected('listing-campus', 'Aungier Street', $old_input); ?>>Aungier Street</option>
+                  <option value="Bolton Street"<?php echo old_selected('listing-campus', 'Bolton Street', $old_input); ?>>Bolton Street</option>
+                  <option value="Blanchardstown"<?php echo old_selected('listing-campus', 'Blanchardstown', $old_input); ?>>Blanchardstown</option>
+                  <option value="Tallaght"<?php echo old_selected('listing-campus', 'Tallaght', $old_input); ?>>Tallaght</option>
                 </select>
               </div>
 
@@ -172,13 +183,14 @@ unset($_SESSION['listing_error'], $_SESSION['success']);
                   type="file"
                   id="listing-image"
                   name="listing-image"
-                  accept="image/*"
+                  accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp"
                 />
+                <p class="form-note">Optional. JPG, PNG, GIF, or WebP. Max 2MB.</p>
               </div>
 
               <button class="btn-submit" type="submit">Post Listing</button>
               <p class="form-note">
-                Images use safe placeholder artwork for now. Upload handling can come later.
+                If you skip the image, Loop will use a simple category placeholder.
               </p>
             </form>
           </div>

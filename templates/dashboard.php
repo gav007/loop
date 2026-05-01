@@ -13,7 +13,9 @@ $username = isset($_SESSION['registered_username'])
 include("../backend/db_connect.php");
 require_once("../backend/recommendations.php");
 
-$user_interests = loop_get_user_interests($conn, loop_user_id());
+$user_id = loop_user_id();
+$user_interests = loop_get_user_interests($conn, $user_id);
+$saved_listing_count = loop_get_saved_listing_count($conn, $user_id);
 $conn->close();
 ?>
 
@@ -117,6 +119,10 @@ $conn->close();
                 <?php echo htmlspecialchars(implode(", ", $user_interests), ENT_QUOTES, 'UTF-8'); ?>.
               </p>
             <?php } ?>
+            <p class="form-note dashboard-saved-line">
+              Saved items: <?php echo (int) $saved_listing_count; ?>.
+              Save marketplace listings to help Loop learn what to recommend.
+            </p>
           </div>
           <a class="btn" href="profile.php">Edit Interests</a>
         </section>
