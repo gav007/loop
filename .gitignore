@@ -2,5 +2,6 @@
 LOGIN_DETAILS.txt
 backend/db.local.php
 debug.log
+LoopVideo.mp4
 uploads/listings/*
 !uploads/listings/.gitkeep

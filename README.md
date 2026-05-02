@@ -11,6 +11,12 @@ This repository was prepared for **Server-side Web Development COMP3101**
 
 The website includes a landing page, user registration, login, protected dashboard, logout, profile interests, real listing creation, image upload, listing detail pages, saved listings, and a database-backed marketplace feed.
 
+## Demo Video
+
+[![Loop demo video thumbnail](docs/media/loop-demo-thumbnail.jpg)](docs/media/loop-demo.mp4)
+
+Click the thumbnail to open and play the MP4 demo.
+
 ## Screenshots
 
 These screenshots show the current Loop branding and key user flows.
