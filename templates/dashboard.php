@@ -16,7 +16,11 @@ require_once("../backend/recommendations.php");
 $user_id = loop_user_id();
 $user_interests = loop_get_user_interests($conn, $user_id);
 $saved_listing_count = loop_get_saved_listing_count($conn, $user_id);
+$impact = loop_get_impact_stats($conn);
 $conn->close();
+
+$show_onboarding = !empty($_SESSION['show_onboarding']);
+unset($_SESSION['show_onboarding']);
 ?>
 
 <!doctype html>
@@ -60,6 +64,7 @@ $conn->close();
               <h3><a class="active" href="dashboard.php">Dashboard</a></h3>
               <h3><a href="marketplace.php">Marketplace</a></h3>
               <h3><a href="create_post.php">Create Listing</a></h3>
+              <h3><a href="my_listings.php">My Listings</a></h3>
               <h3><a href="profile.php">Profile</a></h3>
             </nav>
           </section>
@@ -92,6 +97,10 @@ $conn->close();
               <strong>Create Listing</strong>
               <span>Offer something to sell, swap, donate, lend, or give away.</span>
             </a>
+            <a class="quick-action" href="my_listings.php">
+              <strong>My Listings</strong>
+              <span>Edit your posts and mark items unavailable, reused, or archived.</span>
+            </a>
             <a class="quick-action" href="marketplace.php">
               <strong>Browse Marketplace</strong>
               <span>Find second-hand items from students on your campus.</span>
@@ -100,10 +109,6 @@ $conn->close();
               <strong>Edit Profile</strong>
               <span>Keep your account ready for interests and recommendations.</span>
             </a>
-            <div class="quick-action quick-action-muted">
-              <strong>Set Interests</strong>
-              <span>Interest choices will help Loop personalise your marketplace later.</span>
-            </div>
           </div>
         </section>
 
@@ -129,29 +134,43 @@ $conn->close();
 
         <section class="card dashboard-section dashboard-teaser">
           <div>
-            <p class="eyebrow">Impact teaser</p>
-            <h2>Small actions add up.</h2>
+            <p class="eyebrow">Campus impact</p>
+            <h2><?php echo (int) $impact['items_reused']; ?> item<?php echo $impact['items_reused'] !== 1 ? "s" : ""; ?> reused across Loop.</h2>
             <p>
-              Browse the marketplace or create a listing to start building your Loop.
+              Every listing posted keeps something out of the bin.
             </p>
           </div>
-          <div class="impact-grid impact-grid-compact" aria-label="Sustainability impact preview">
+          <div class="impact-grid impact-grid-compact" aria-label="Sustainability impact">
             <article class="impact-card">
               <span>Items reused</span>
-              <strong>0</strong>
+              <strong><?php echo (int) $impact['items_reused']; ?></strong>
             </article>
             <article class="impact-card">
               <span>Active swaps</span>
-              <strong>0</strong>
+              <strong><?php echo (int) $impact['active_swaps']; ?></strong>
             </article>
             <article class="impact-card">
               <span>Waste diverted</span>
-              <strong>0 kg</strong>
+              <strong><?php echo $impact['waste_diverted_kg']; ?> kg</strong>
             </article>
           </div>
         </section>
       </div>
     </main>
+
+    <?php if ($show_onboarding) { ?>
+    <div class="onboarding-overlay" id="onboarding-overlay" role="dialog" aria-modal="true" aria-label="Welcome to Loop">
+      <div class="onboarding-modal">
+        <h2>Welcome to Loop!</h2>
+        <p>Loop works best when you tell it what you're into, or post your first item.</p>
+        <div class="onboarding-actions">
+          <a class="btn-submit" href="profile.php">Set My Interests</a>
+          <a class="btn" href="create_post.php">Post Something</a>
+        </div>
+        <button class="onboarding-skip" onclick="document.getElementById('onboarding-overlay').style.display='none'">Skip for now</button>
+      </div>
+    </div>
+    <?php } ?>
 
     <footer>
       <div class="wrap">Copyright (c) Loop</div>

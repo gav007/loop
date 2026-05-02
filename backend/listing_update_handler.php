@@ -7,13 +7,15 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != 1) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../templates/create_post.php");
+    header("Location: ../templates/my_listings.php");
     exit();
 }
 
 include("db_connect.php");
 require_once("recommendations.php");
 
+$user_id = loop_user_id();
+$listing_id = isset($_POST['listing_id']) ? (int) $_POST['listing_id'] : 0;
 $title = trim($_POST['listing-title'] ?? "");
 $description = trim($_POST['listing-description'] ?? "");
 $category = trim($_POST['listing-category'] ?? "");
@@ -21,17 +23,38 @@ $listing_type = trim($_POST['listing-type'] ?? "");
 $condition = trim($_POST['listing-condition'] ?? "");
 $price_input = trim($_POST['listing-price'] ?? "");
 $campus = trim($_POST['listing-campus'] ?? "");
-$user_id = loop_user_id();
+$status = trim($_POST['listing-status'] ?? "");
 $errors = [];
-$old_input = [
-    "listing-title" => $title,
-    "listing-category" => $category,
-    "listing-type" => $listing_type,
-    "listing-condition" => $condition,
-    "listing-description" => $description,
-    "listing-price" => $price_input,
-    "listing-campus" => $campus
-];
+$redirect = "../templates/edit_listing.php?id=" . $listing_id;
+
+if ($listing_id <= 0 || $user_id <= 0) {
+    $_SESSION['listing_error'] = "Listing could not be found.";
+    $conn->close();
+    header("Location: ../templates/my_listings.php");
+    exit();
+}
+
+$existing_stmt = $conn->prepare("SELECT image_path FROM listings WHERE id = ? AND user_id = ? LIMIT 1");
+
+if (!$existing_stmt) {
+    $_SESSION['listing_error'] = "Listing could not be loaded right now.";
+    $conn->close();
+    header("Location: ../templates/my_listings.php");
+    exit();
+}
+
+$existing_stmt->bind_param("ii", $listing_id, $user_id);
+$existing_stmt->execute();
+$existing_result = $existing_stmt->get_result();
+$existing_listing = $existing_result->fetch_assoc();
+$existing_stmt->close();
+
+if (!$existing_listing) {
+    $_SESSION['listing_error'] = "Only the listing owner can edit this listing.";
+    $conn->close();
+    header("Location: ../templates/my_listings.php");
+    exit();
+}
 
 if ($title === "" || strlen($title) > 120) {
     $errors[] = "Please enter a title under 120 characters.";
@@ -57,6 +80,10 @@ if (!in_array($campus, loop_campuses(), true)) {
     $errors[] = "Please select a valid campus.";
 }
 
+if (!in_array($status, loop_listing_statuses(), true)) {
+    $errors[] = "Please select a valid listing status.";
+}
+
 $price = null;
 if (in_array($listing_type, ["free", "donation"], true)) {
     $price = 0;
@@ -74,12 +101,17 @@ if (in_array($listing_type, ["free", "donation"], true)) {
     }
 }
 
-$image_path = loop_default_listing_image($category);
+$existing_image_path = (string) ($existing_listing['image_path'] ?? "");
+$image_path = $existing_image_path;
 $image_notice = "";
+
+if ($image_path === "" || loop_is_default_listing_image($image_path)) {
+    $image_path = loop_default_listing_image($category);
+}
 
 if (isset($_FILES['listing-image']) && $_FILES['listing-image']['error'] !== UPLOAD_ERR_NO_FILE) {
     if ($_FILES['listing-image']['error'] !== UPLOAD_ERR_OK) {
-        $errors[] = "Image upload failed. Please try an image under 2MB or post without one.";
+        $errors[] = "Image upload failed. Please try an image under 2MB or keep the current image.";
     } else {
         $max_size = 2 * 1024 * 1024;
         $tmp_name = $_FILES['listing-image']['tmp_name'];
@@ -110,7 +142,7 @@ if (isset($_FILES['listing-image']) && $_FILES['listing-image']['error'] !== UPL
             if (is_writable($upload_dir) && move_uploaded_file($tmp_name, $destination)) {
                 $image_path = "../uploads/listings/" . $filename;
             } else {
-                $image_notice = " The image could not be saved, so Loop used a category placeholder.";
+                $image_notice = " The new image could not be saved, so Loop kept the current image.";
             }
         }
     }
@@ -118,29 +150,26 @@ if (isset($_FILES['listing-image']) && $_FILES['listing-image']['error'] !== UPL
 
 if (!empty($errors)) {
     $_SESSION['listing_error'] = implode(" ", $errors);
-    $_SESSION['listing_old'] = $old_input;
     $conn->close();
-    header("Location: ../templates/create_post.php");
+    header("Location: " . $redirect);
     exit();
 }
 
-$sql = "INSERT INTO listings
-    (user_id, title, description, category, listing_type, item_condition, price, campus, image_path, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')";
-
+$sql = "UPDATE listings
+        SET title = ?, description = ?, category = ?, listing_type = ?, item_condition = ?,
+            price = ?, campus = ?, image_path = ?, status = ?
+        WHERE id = ? AND user_id = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
-    $_SESSION['listing_error'] = "Listing could not be saved right now.";
-    $_SESSION['listing_old'] = $old_input;
+    $_SESSION['listing_error'] = "Listing could not be updated right now.";
     $conn->close();
-    header("Location: ../templates/create_post.php");
+    header("Location: " . $redirect);
     exit();
 }
 
 $stmt->bind_param(
-    "isssssdss",
-    $user_id,
+    "sssssdsssii",
     $title,
     $description,
     $category,
@@ -148,21 +177,23 @@ $stmt->bind_param(
     $condition,
     $price,
     $campus,
-    $image_path
+    $image_path,
+    $status,
+    $listing_id,
+    $user_id
 );
 
 if ($stmt->execute()) {
-    $_SESSION['success'] = "Listing created successfully." . $image_notice;
+    $_SESSION['success'] = "Listing updated." . $image_notice;
     $stmt->close();
     $conn->close();
-    header("Location: ../templates/marketplace.php");
+    header("Location: ../templates/listing_detail.php?id=" . $listing_id);
     exit();
 }
 
-$_SESSION['listing_error'] = "Listing could not be saved right now.";
-$_SESSION['listing_old'] = $old_input;
+$_SESSION['listing_error'] = "Listing could not be updated right now.";
 $stmt->close();
 $conn->close();
-header("Location: ../templates/create_post.php");
+header("Location: " . $redirect);
 exit();
 ?>

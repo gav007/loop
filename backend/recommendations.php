@@ -36,6 +36,61 @@ function loop_campuses() {
     return ["Grangegorman", "Aungier Street", "Bolton Street", "Blanchardstown", "Tallaght"];
 }
 
+function loop_listing_statuses() {
+    return ["active", "unavailable", "reused", "archived"];
+}
+
+function loop_pretty_status($status) {
+    $labels = [
+        "active" => "Active",
+        "unavailable" => "Unavailable",
+        "reused" => "Reused",
+        "archived" => "Archived"
+    ];
+
+    return $labels[$status] ?? ucfirst((string) $status);
+}
+
+function loop_default_listing_images() {
+    return [
+        "Books" => "../assets/listings/books.svg",
+        "Course materials" => "../assets/listings/books.svg",
+        "Tech & electronics" => "../assets/listings/tech.svg",
+        "Clothes" => "../assets/listings/clothes.svg",
+        "Furniture" => "../assets/listings/furniture.svg",
+        "Kitchen & home" => "../assets/listings/home.svg",
+        "Bikes & scooters" => "../assets/listings/other.svg",
+        "Music, CDs & vinyl" => "../assets/listings/music.svg",
+        "Instruments & audio gear" => "../assets/listings/music.svg",
+        "Sports & outdoor" => "../assets/listings/other.svg",
+        "Art & design supplies" => "../assets/listings/art.svg",
+        "Tools & DIY" => "../assets/listings/other.svg",
+        "Gaming" => "../assets/listings/gaming.svg",
+        "Other" => "../assets/listings/other.svg"
+    ];
+}
+
+function loop_default_listing_image($category) {
+    $image_paths = loop_default_listing_images();
+    return $image_paths[$category] ?? "../assets/listings/other.svg";
+}
+
+function loop_is_default_listing_image($image_path) {
+    return in_array($image_path, array_values(loop_default_listing_images()), true);
+}
+
+function loop_parse_listing_price($value) {
+    $clean_value = strtolower(trim((string) $value));
+    $clean_value = str_replace(["eur", "€", ","], "", $clean_value);
+    $clean_value = trim($clean_value);
+
+    if ($clean_value === "") {
+        return null;
+    }
+
+    return is_numeric($clean_value) ? (float) $clean_value : false;
+}
+
 function loop_user_id() {
     return isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
 }
@@ -191,6 +246,37 @@ function loop_get_recent_saved_listings($conn, $user_id, $limit = 4) {
 
     $stmt->close();
     return $listings;
+}
+
+function loop_get_impact_stats($conn) {
+    $reused_stmt = $conn->prepare("SELECT COUNT(*) AS cnt FROM listings WHERE status = 'reused'");
+    $reused_count = 0;
+
+    if ($reused_stmt) {
+        $reused_stmt->execute();
+        $row = $reused_stmt->get_result()->fetch_assoc();
+        $reused_count = (int) ($row['cnt'] ?? 0);
+        $reused_stmt->close();
+    }
+
+    $swaps_stmt = $conn->prepare("SELECT COUNT(*) AS cnt FROM listings WHERE listing_type = 'swap' AND status = 'active'");
+    $active_swaps = 0;
+
+    if ($swaps_stmt) {
+        $swaps_stmt->execute();
+        $row = $swaps_stmt->get_result()->fetch_assoc();
+        $active_swaps = (int) ($row['cnt'] ?? 0);
+        $swaps_stmt->close();
+    }
+
+    // Estimated 1.5 kg per reused item (average small household/student item)
+    $waste_diverted_kg = round($reused_count * 1.5, 1);
+
+    return [
+        'items_reused'      => $reused_count,
+        'active_swaps'      => $active_swaps,
+        'waste_diverted_kg' => $waste_diverted_kg,
+    ];
 }
 
 function loop_score_listing($listing, $interests, $saved_categories = []) {

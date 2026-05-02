@@ -65,6 +65,7 @@ function old_selected($field, $value, $old_input) {
               <h3><a href="dashboard.php">Dashboard</a></h3>
               <h3><a href="marketplace.php">Marketplace</a></h3>
               <h3><a class="active" href="create_post.php">Create Listing</a></h3>
+              <h3><a href="my_listings.php">My Listings</a></h3>
               <h3><a href="profile.php">Profile</a></h3>
             </nav>
           </div>

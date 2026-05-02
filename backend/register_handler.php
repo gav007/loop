@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-
-
-// adapted from lab 5
-// defines the variables
-
 $username = "";
 $email = "";
 $password = "";
@@ -22,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $usernameErr = "Name is required";
     }
     else {
-        $username = clean_data($_POST["username"]); // stores post method in the variable
+        $username = clean_data($_POST["username"]);
     }
 
     if (empty($_POST['email'])) {
@@ -33,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $emailErr = "This is not a valid email";
+        } elseif (!preg_match('/@(tudublin\.ie|mytudublin\.ie)$/i', $email)) {
+            $emailErr = "Please use your TU Dublin email address (@tudublin.ie or @mytudublin.ie)";
         }
     }
 
@@ -64,45 +61,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $passwordErr != "" ||
         $confirm_passwordErr != ""
     ) {
-        $_SESSION["error"] = $usernameErr . " " . $emailErr . " " . $passwordErr . " " . $confirm_passwordErr;
+        $_SESSION["error"] = trim($usernameErr . " " . $emailErr . " " . $passwordErr . " " . $confirm_passwordErr);
         header("Location: ../templates/register.php");
         exit();
     }
 
     include("db_connect.php");
 
-    $safe_username = $conn->real_escape_string($username);
-    $safe_email = $conn->real_escape_string($email);
+    $check_stmt = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
 
-    $check_email_sql = "SELECT email FROM users WHERE email = '$safe_email' LIMIT 1";
-    $check_email_result = $conn->query($check_email_sql);
+    if (!$check_stmt) {
+        $_SESSION["error"] = "Registration failed. Please try again.";
+        $conn->close();
+        header("Location: ../templates/register.php");
+        exit();
+    }
 
-    if ($check_email_result->num_rows > 0) {
+    $check_stmt->bind_param("s", $email);
+    $check_stmt->execute();
+    $check_result = $check_stmt->get_result();
+
+    if ($check_result->num_rows > 0) {
+        $check_stmt->close();
         $_SESSION["error"] = "This email is already registered. Please use a different email or log in.";
         $conn->close();
         header("Location: ../templates/register.php");
         exit();
     }
 
-    // hash
+    $check_stmt->close();
+
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $safe_password = $conn->real_escape_string($hashed_password);
 
-    $sql = "INSERT INTO users (username, email, password)
-    VALUES ('$safe_username', '$safe_email', '$safe_password')";
+    $insert_stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
 
-    
-    if ($conn->query($sql) === TRUE) {
+    if (!$insert_stmt) {
+        $_SESSION["error"] = "Registration failed. Please try again.";
+        $conn->close();
+        header("Location: ../templates/register.php");
+        exit();
+    }
+
+    $insert_stmt->bind_param("sss", $username, $email, $hashed_password);
+
+    if ($insert_stmt->execute()) {
+        $insert_stmt->close();
         $_SESSION["registered_username"] = $username;
         $_SESSION["registered_email"] = $email;
+        $_SESSION["show_onboarding"] = true;
         $_SESSION["success"] = "Registration successful. Please log in.";
-        $conn ->close();
+        $conn->close();
         header("Location: ../templates/landing_page.php");
         exit();
     } else {
-    echo "Error: " . $conn->error;
+        $insert_stmt->close();
+        $_SESSION["error"] = "Registration failed. Please try again.";
+        $conn->close();
+        header("Location: ../templates/register.php");
+        exit();
     }
-
 }
 
 header("Location: ../templates/register.php");

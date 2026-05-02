@@ -705,3 +705,47 @@ button {
 .btn-submit:visited {
   color: #ffffff;
 }
+
+/* Reused celebration banner */
+.message-reused {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #edf8f2;
+  border: 2px solid #4d9b69;
+  color: #1f6a3d;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.dark-theme .message-reused {
+  background: rgba(77, 155, 105, 0.22);
+  border-color: rgba(77, 155, 105, 0.6);
+  color: #ffffff;
+}
+
+/* Share toast */
+.share-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2f477a;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  z-index: 900;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Sticky header for mobile scroll */
+@media (max-width: 700px) {
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}

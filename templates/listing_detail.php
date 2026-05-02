@@ -1,36 +1,27 @@
 <?php
 session_start();
-if (!isset($_SESSION['login']) || $_SESSION['login'] != 1) {
-    header("Location: landing_page.php");
-    exit();
-}
+
+// P2-1: Allow unauthenticated users to view listings — gate interactions only
+$is_authenticated = isset($_SESSION['login']) && $_SESSION['login'] == 1;
 
 include("../backend/db_connect.php");
 require_once("../backend/recommendations.php");
 
 $listing_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$user_id = loop_user_id();
+$user_id = $is_authenticated ? loop_user_id() : 0;
 $success = $_SESSION['success'] ?? "";
 $listing_error = $_SESSION['listing_error'] ?? "";
-unset($_SESSION['success'], $_SESSION['listing_error']);
+$reused_celebration = $_SESSION['reused_celebration'] ?? "";
+unset($_SESSION['success'], $_SESSION['listing_error'], $_SESSION['reused_celebration']);
 
 function safe_text($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
 function status_label($status) {
-    if ($status === "active") {
-        return "Active";
-    }
-
-    if ($status === "unavailable") {
-        return "Unavailable";
-    }
-
-    if ($status === "archived") {
-        return "Archived";
-    }
-
+    if ($status === "active")      return "Active";
+    if ($status === "unavailable") return "Unavailable";
+    if ($status === "archived")    return "Archived";
     return ucfirst($status);
 }
 
@@ -38,7 +29,7 @@ $listing = null;
 $is_saved = false;
 
 if ($listing_id > 0) {
-    $sql = "SELECT listings.*, users.username AS owner_username
+    $sql = "SELECT listings.*, users.username AS owner_username, users.email AS owner_email
             FROM listings
             LEFT JOIN users ON users.id = listings.user_id
             WHERE listings.id = ?
@@ -54,12 +45,12 @@ if ($listing_id > 0) {
     }
 }
 
-if ($listing) {
+if ($listing && $is_authenticated) {
     $is_saved = loop_is_listing_saved($conn, $user_id, (int) $listing['id']);
 }
 
 $conn->close();
-$is_owner = $listing && (int) $listing['user_id'] === $user_id;
+$is_owner = $listing && $is_authenticated && (int) $listing['user_id'] === $user_id;
 $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_owner;
 ?>
 
@@ -68,7 +59,7 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loop | Listing Details</title>
+    <title>Loop | <?php echo $listing ? safe_text($listing['title']) : "Listing"; ?></title>
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -82,7 +73,7 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
   <body>
     <header>
       <div class="wrap">
-        <a class="brand" href="dashboard.php">
+        <a class="brand" href="<?php echo $is_authenticated ? 'dashboard.php' : 'landing_page.php'; ?>">
           <img src="../assets/favicon.svg" alt="Loop logo" />
           <span class="brand-name">Loop</span>
         </a>
@@ -90,8 +81,13 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
           <button class="home-variant home-variant-outline" onclick="myFunction()">
             Toggle dark mode
           </button>
-          <a class="home-variant home-variant-outline" href="dashboard.php">Home</a>
-          <a class="home-variant home-variant-outline" href="../backend/logout.php">Log Out</a>
+          <?php if ($is_authenticated) { ?>
+            <a class="home-variant home-variant-outline" href="dashboard.php">Home</a>
+            <a class="home-variant home-variant-outline" href="../backend/logout.php">Log Out</a>
+          <?php } else { ?>
+            <a class="home-variant home-variant-outline" href="register.php">Join Loop</a>
+            <a class="home-variant home-variant-outline" href="landing_page.php">Log In</a>
+          <?php } ?>
         </div>
       </div>
     </header>
@@ -99,18 +95,26 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
     <main>
       <div class="wrap">
         <div class="main-row-nav">
+          <?php if ($is_authenticated) { ?>
           <section class="card sidebar">
             <h2>Menu</h2>
             <nav>
               <h3><a href="dashboard.php">Dashboard</a></h3>
               <h3><a class="active" href="marketplace.php">Marketplace</a></h3>
               <h3><a href="create_post.php">Create Listing</a></h3>
+              <h3><a href="my_listings.php">My Listings</a></h3>
               <h3><a href="profile.php">Profile</a></h3>
             </nav>
           </section>
+          <?php } ?>
 
           <section class="card main-content">
-            <?php if ($success !== "") { ?>
+            <?php if ($reused_celebration !== "") { ?>
+              <div class="message message-reused">
+                <strong>This item found a new home.</strong> "<?php echo safe_text($reused_celebration); ?>" has been marked as reused — one more item kept out of the bin.
+              </div>
+            <?php } ?>
+            <?php if ($success !== "" && $reused_celebration === "") { ?>
               <p class="message message-success"><?php echo safe_text($success); ?></p>
             <?php } ?>
             <?php if ($listing_error !== "") { ?>
@@ -139,7 +143,7 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
                   <div class="listing-detail-title-row">
                     <h1><?php echo safe_text($listing['title']); ?></h1>
                     <span class="status-pill status-<?php echo safe_text($listing['status']); ?>">
-                      <?php echo safe_text(status_label($listing['status'])); ?>
+                      <?php echo safe_text(loop_pretty_status($listing['status'])); ?>
                     </span>
                   </div>
 
@@ -151,19 +155,22 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
                   </div>
 
                   <div class="action-row listing-detail-actions">
-                    <form class="save-listing-form" action="../backend/saved_listing_handler.php" method="post">
-                      <input type="hidden" name="listing_id" value="<?php echo (int) $listing['id']; ?>" />
-                      <input type="hidden" name="action" value="<?php echo $is_saved ? "unsave" : "save"; ?>" />
-                      <input type="hidden" name="redirect" value="listing_detail.php?id=<?php echo (int) $listing['id']; ?>" />
-                      <button
-                        class="listing-save-button<?php echo $is_saved ? " is-saved" : ""; ?>"
-                        type="submit"
-                        aria-pressed="<?php echo $is_saved ? "true" : "false"; ?>"
-                        <?php if (!$is_saved && $listing['status'] !== "active") echo "disabled"; ?>
-                      >
-                        <?php echo $is_saved ? "Saved" : "Save Listing"; ?>
-                      </button>
-                    </form>
+                    <?php if ($is_authenticated) { ?>
+                      <form class="save-listing-form" action="../backend/saved_listing_handler.php" method="post">
+                        <input type="hidden" name="listing_id" value="<?php echo (int) $listing['id']; ?>" />
+                        <input type="hidden" name="action" value="<?php echo $is_saved ? "unsave" : "save"; ?>" />
+                        <input type="hidden" name="redirect" value="listing_detail.php?id=<?php echo (int) $listing['id']; ?>" />
+                        <button
+                          class="listing-save-button<?php echo $is_saved ? " is-saved" : ""; ?>"
+                          type="submit"
+                          aria-pressed="<?php echo $is_saved ? "true" : "false"; ?>"
+                          <?php if (!$is_saved && $listing['status'] !== "active") echo "disabled"; ?>
+                        >
+                          <?php echo $is_saved ? "Saved" : "Save Listing"; ?>
+                        </button>
+                      </form>
+                    <?php } ?>
+                    <button class="btn" onclick="loopShareListing('<?php echo safe_text($listing['title']); ?>')">Share</button>
                   </div>
 
                   <dl class="listing-details listing-detail-facts">
@@ -194,12 +201,31 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
                     <p><?php echo nl2br(safe_text($listing['description'])); ?></p>
                   </section>
 
-                  <section class="listing-detail-section contact-placeholder">
+                  <!-- P0-3: Contact flow -->
+                  <section class="listing-detail-section contact-section">
                     <h2>Contact</h2>
-                    <p>
-                      Contact and messaging are coming soon. For now, use your TU Dublin email
-                      and arrange any collection safely on campus.
-                    </p>
+                    <?php if (!$is_authenticated) { ?>
+                      <div class="contact-cta">
+                        <p>Join Loop to contact this seller and save listings.</p>
+                        <div class="action-row">
+                          <a class="btn-submit" href="register.php">Register with TU Dublin Email</a>
+                          <a class="btn" href="landing_page.php">Log In</a>
+                        </div>
+                      </div>
+                    <?php } elseif ($is_owner) { ?>
+                      <p class="form-note">This is your listing. Edit it from Owner Actions below.</p>
+                    <?php } elseif ($listing['status'] !== "active") { ?>
+                      <p class="form-note">This listing is no longer active.</p>
+                    <?php } else { ?>
+                      <p>Message <strong><?php echo safe_text($listing['owner_username'] ?: "this student"); ?></strong> about this listing:</p>
+                      <div class="contact-email-reveal">
+                        <a class="btn-submit" href="mailto:<?php echo safe_text($listing['owner_email']); ?>?subject=<?php echo urlencode("Loop: " . $listing['title']); ?>">
+                          Email Seller
+                        </a>
+                        <span class="contact-email-address"><?php echo safe_text($listing['owner_email']); ?></span>
+                      </div>
+                      <p class="form-note">Arrange collection safely on campus. Never pay before seeing the item.</p>
+                    <?php } ?>
                   </section>
 
                   <?php if ($is_owner) { ?>
@@ -208,7 +234,8 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
                       <p class="form-note">
                         These actions only appear for the student who created the listing.
                       </p>
-                      <div class="action-row">
+                      <div class="action-row owner-listing-actions">
+                        <a class="btn" href="edit_listing.php?id=<?php echo (int) $listing['id']; ?>">Edit Listing</a>
                         <form action="../backend/listing_status_handler.php" method="post">
                           <input type="hidden" name="listing_id" value="<?php echo (int) $listing['id']; ?>" />
                           <input type="hidden" name="status" value="active" />
@@ -221,6 +248,11 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
                         </form>
                         <form action="../backend/listing_status_handler.php" method="post">
                           <input type="hidden" name="listing_id" value="<?php echo (int) $listing['id']; ?>" />
+                          <input type="hidden" name="status" value="reused" />
+                          <button class="btn-submit" type="submit">Mark Reused</button>
+                        </form>
+                        <form action="../backend/listing_status_handler.php" method="post">
+                          <input type="hidden" name="listing_id" value="<?php echo (int) $listing['id']; ?>" />
                           <input type="hidden" name="status" value="archived" />
                           <button class="btn btn-danger" type="submit">Archive Listing</button>
                         </form>
@@ -229,7 +261,14 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
                   <?php } ?>
 
                   <div class="action-row">
-                    <a class="btn" href="marketplace.php">Back to Marketplace</a>
+                    <?php if ($is_authenticated) { ?>
+                      <a class="btn" href="marketplace.php">Back to Marketplace</a>
+                      <?php if ($is_owner) { ?>
+                        <a class="btn" href="my_listings.php">My Listings</a>
+                      <?php } ?>
+                    <?php } else { ?>
+                      <a class="btn" href="landing_page.php">Back to Loop</a>
+                    <?php } ?>
                   </div>
                 </div>
               </div>
@@ -242,6 +281,7 @@ $is_hidden_from_viewer = $listing && $listing['status'] === "archived" && !$is_o
     <footer>
       <div class="wrap">Copyright (c) Loop</div>
     </footer>
+    <div id="loop-share-toast" class="share-toast" style="display:none">Link copied!</div>
     <script src="../scripts/main.js"></script>
   </body>
 </html>

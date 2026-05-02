@@ -13,6 +13,21 @@ function myFunction() {
   }
 }
 
+function loopShareListing(title) {
+  var url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: title + ' on Loop', url: url }).catch(function() {});
+  } else {
+    navigator.clipboard.writeText(url).then(function() {
+      var toast = document.getElementById('loop-share-toast');
+      if (toast) {
+        toast.style.display = 'block';
+        setTimeout(function() { toast.style.display = 'none'; }, 2000);
+      }
+    }).catch(function() {});
+  }
+}
+
 function validatePassword() {
   let password = document.getElementById("password").value;
   let confirmPassword = document.getElementById("confirm_password").value;

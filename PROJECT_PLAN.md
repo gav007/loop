@@ -1,59 +1,55 @@
 # Loop Project Plan
 
-Loop is a TU Dublin circular marketplace for students. The idea is simple:
-make it easy for college students to sell, swap, borrow, donate, give away, and find useful second-hand items across campus.
+Loop is moving beyond the academic prototype stage and toward a real campus pilot.
+The college report has been submitted; the next goal is a live, working TU Dublin
+service that can be deployed, monitored, moderated, and improved over time.
 
-Think of it as a digital college car boot sale, but smarter. Not just a static list of things. Loop should gradually learn what each student cares about and lift the most relevant listings higher in their marketplace feed.
+Loop is a free, verified TU Dublin digital marketplace that helps students and
+staff exchange, donate, borrow, and reuse items across campus while tracking
+sustainability impact over time.
 
-## Product Vision
+It can be understood simply as:
 
-Loop should help students:
+> DoneDeal for students, but campus-verified, sustainability-focused, and built
+> around reuse.
 
-- save money
-- reduce waste
-- reuse useful items
-- find campus-specific deals
-- give unwanted items a second life
-- discover items based on their interests
+That simple explanation is useful, but Loop should stay broader than a buy/sell
+site. It should support student-to-student exchange, academic reuse, campus
+community, free and donation culture, simple personalisation, and safer reuse in a
+verified college environment.
 
-Loop is not only for tech. It should support books, course materials, clothes, furniture, music, instruments, bikes, kitchen items, gaming gear, art supplies, tools, and anything else students realistically trade or reuse.
+## 1. Product Vision
 
-## Core Idea
+Loop should make it easy for TU Dublin students and staff to:
 
-A normal marketplace shows the same feed to everyone.
+- sell useful second-hand items
+- swap items with other students
+- borrow or lend practical campus items
+- donate or give away things that still have value
+- find academic materials, tools, equipment, and course supplies
+- reuse items instead of throwing them away
+- discover relevant listings based on interests, campus, and activity
 
-Loop should eventually make each feed feel personal:
+Loop is not only for electronics. It should support books, course materials,
+clothes, furniture, bikes, kitchen items, music gear, art supplies, tools,
+repair parts, lab items, accommodation bits, and everyday student essentials.
 
-- Stacy likes CDs, vinyl, music, and free items, so music listings appear higher.
-- Marvin likes drums, instruments, and audio gear, so drum-related listings appear higher.
-- New listings still appear so the feed does not become stale.
-- Search and filters always remain available.
+The product identity should stay practical:
 
-The first version should keep this simple. Start with explicit interests that the user chooses. Later, Loop can learn from clicks, saves, searches, messages, claims, and hidden listings.
+- free to use
+- no monetisation for now
+- student and community focused
+- low friction
+- mobile-friendly
+- sustainability-focused without being preachy
+- understandable for a student who just wants to post or find something quickly
 
-## Design Principles
+## 2. Current Working State
 
-College students have limited patience. The app must be low friction.
+Loop is now past the static prototype and report-demonstration stage. The current
+project is a PHP/MySQL web app with real marketplace behaviour already in place.
 
-Important rules:
-
-- Keep signup short.
-- Do not force too many profile questions.
-- Make posting a listing quick.
-- Use plain language.
-- Keep buttons obvious.
-- Keep feeds scannable.
-- Do not bury search and filters.
-- Do not require perfect photos or long descriptions.
-- Make free/swap/donation listings easy to spot.
-- Keep the dashboard simple.
-- Put browsing and discovery in the marketplace.
-
-If a feature takes too much effort, students will ignore it.
-
-## Current Phase
-
-Current implemented direction:
+Implemented features to preserve:
 
 - PHP/MySQL project
 - login/register/logout
@@ -62,253 +58,417 @@ Current implemented direction:
 - database-backed listings
 - seeded demo listings
 - marketplace feed
+- listing detail page
+- image upload support
+- local placeholder SVG listing images
 - profile interests
 - simple recommendation scoring
 - saved listings
-- local placeholder SVG listing images
 
-## Phase Checklist
+Current direction:
 
-### Phase 1: UI Cleanup And Product Direction
+- Keep the existing PHP/MySQL stack.
+- Keep the current project maintainable and understandable.
+- Build forward from the working version instead of restarting.
+- Do not migrate to React, Laravel, or another framework for the pilot.
+- Do not redesign Loop into a corporate SaaS product.
 
-Goal: make the prototype feel like Loop, not a generic form project.
+## 3. Launch Philosophy
 
-- [x] Keep existing PHP/CSS structure.
-- [x] Keep Loop visual identity.
-- [x] Broaden copy beyond electronics.
-- [x] Simplify dashboard into a launchpad.
-- [x] Make marketplace the main browsing/feed page.
-- [x] Normalize listing types.
-- [x] Add TU Dublin campus options.
-- [x] Expand categories.
-- [x] Fix inconsistent button styles.
-- [x] Improve empty states.
-- [x] Protect logged-in pages.
+The launch version should be small, safe, and useful.
 
-### Phase 2: Real Marketplace Foundation
+Loop does not need every clever feature before it reaches real users. It needs the
+core service to work reliably:
 
-Goal: make the marketplace real enough to browse and demo.
+- students can register and verify they belong to the college community
+- verified users can create, save, and respond to listings
+- users can browse and search listings easily
+- owners can manage their own listings
+- reported content can be reviewed
+- administrators can hide unsafe or inappropriate listings
+- the project can be deployed with backups, logging, and basic security
+- usage can be tracked in a privacy-friendly way
 
-- [x] Add `listings` table.
-- [x] Add `user_interests` table.
-- [x] Add SQL setup file.
-- [x] Add demo seed listings.
-- [x] Add local listing placeholder images.
-- [x] Add create listing backend handler.
-- [x] Save listings to MySQL.
-- [x] Render listings from MySQL.
-- [x] Add working search/filter basics.
-- [x] Add profile interest checkboxes.
-- [x] Save interests to MySQL.
-- [x] Add simple recommendation scoring.
-- [x] Keep dashboard simple with a profile/interests prompt.
+The pilot should prove whether students actually use Loop, what they post, what
+they save, what causes friction, and what moderation issues appear.
 
-### Phase 3: Listing Detail And Trust
+## 4. MVP Launch Requirements
 
-Goal: make listings feel usable and credible.
+The MVP launch should include only what is needed for a real campus pilot.
 
-- [x] Add listing detail page.
-- [x] Link listing cards to listing detail.
-- [x] Show full description, campus, date, condition, price, and owner.
-- [x] Add clear listing status labels.
-- [ ] Add report/remove placeholder for safety.
-- [x] Add contact/message placeholder.
-- [x] Add "mark as claimed" or "mark unavailable" for listing owner.
-- [x] Prevent users from editing/deleting other users' listings.
-- [ ] Add owner-only edit listing page.
-- [x] Add owner-only delete/archive listing action.
+Core marketplace:
 
-### Phase 4: Lower-Friction Listing Creation
+- register, login, logout
+- verified account state
+- marketplace feed
+- listing detail page
+- create listing
+- image upload
+- saved listings
+- search and filters
+- owner-only listing controls
+- My Listings page
+- Edit Listing page
+- listing status: active, unavailable, reused, archived
+- mark listing as reused/completed
 
-Goal: make posting quick enough that students will actually do it.
+Core trust and safety:
 
-- [ ] Reduce form friction where possible.
-- [ ] Add helper text for price based on listing type.
-- [ ] Hide price when listing type is free/donation/wanted/borrow where appropriate.
-- [x] Add image upload support.
-- [x] Validate image type and size.
-- [x] Add default category image fallback.
-- [ ] Keep listing creation under one page.
-- [ ] Add success state after posting.
-- [ ] Add "post another" option.
+- TU Dublin email verification or equivalent lightweight verification
+- report listing button
+- admin review page
+- admin ability to hide/remove listings
+- admin ability to suspend accounts
+- clear acceptable-use rules
+- basic audit trail for moderation actions
 
-### Phase 5: Better Marketplace Browsing
+Core launch support:
 
-Goal: make the feed easier to scan and search.
+- production configuration
+- HTTPS
+- secure upload handling
+- private environment/config values
+- database backup plan
+- error logging
+- public PHP errors disabled
+- README and database setup notes updated
 
-- [ ] Add listing count by filter result.
-- [ ] Add clear filter reset button.
-- [ ] Add active filter chips.
-- [ ] Improve mobile filter layout.
-- [ ] Add "free only" shortcut.
-- [ ] Add "near my campus" shortcut.
-- [ ] Add "new this week" shortcut.
-- [ ] Keep Recommended, Newest, Free first, and Lowest price sorting.
-- [ ] Add empty states for filtered searches.
+Useful but not essential for MVP:
 
-### Phase 6: Personalisation Loop
+- better recommendation reasons
+- wanted listings
+- campus preference shortcuts
+- basic impact page
+- contact/message workflow beyond a safe placeholder
 
-Goal: make the feed feel different for different users.
+## 5. Campus Verification Plan
 
-Start simple:
+Avoid Microsoft, Azure, or formal college SSO for the MVP. Institutional SSO may
+be useful later, but it adds complexity, permissions work, and support overhead
+before the pilot has proven enough.
 
-- [x] Use explicit interests selected in profile.
-- [x] Score category matches.
-- [x] Boost free/donation if user likes free items.
-- [x] Boost fresh listings.
+Use lightweight verification first:
 
-Next:
+- require TU Dublin email domains where possible
+- send a one-time verification link or code
+- mark accounts as verified after the code/link is confirmed
+- allow unverified accounts to browse only if desired
+- require verification before posting listings
+- require verification before saving listings
+- require verification before contacting users
+- add admin-approved invite codes later if email-domain verification is awkward
+- keep Microsoft SSO as a future institutional integration, not an MVP blocker
 
-- [ ] Track listing views.
-- [ ] Track listing clicks.
-- [ ] Track saves.
-- [ ] Track searches.
-- [ ] Track messages/contact attempts.
-- [ ] Track claimed/bought/swapped items.
-- [ ] Track hidden listings.
-- [ ] Add `user_activity` table.
-- [ ] Update interest weights from behaviour.
-- [ ] Show simple recommendation reasons.
+Verification should answer one simple question:
 
-Example scoring later:
+> Is this person likely to be part of the TU Dublin community?
 
-- view: +1
-- click: +3
-- save: +8
-- message/contact: +12
-- claim/buy/swap: +20
-- hide: -10
+It does not need to solve every identity problem on day one.
 
-### Phase 7: Save Items
+## 6. Moderation And Misuse Monitoring
 
-Goal: let students come back to listings.
+Loop needs practical moderation before it needs reputation scores or gamification.
 
-- [x] Add `saved_listings` table.
-- [x] Make save button functional.
-- [x] Add saved items profile section.
-- [x] Add saved item count on dashboard.
-- [x] Use saved items as a recommendation signal.
-- [x] Show "saved" state on listing cards.
-- [x] Keep save action one click.
+Moderation roadmap:
 
-### Phase 8: Sustainability Impact
+- add a report listing button
+- add report user later
+- create an admin review page
+- let admins hide listings
+- let admins remove listings
+- let admins suspend accounts
+- record who took each moderation action and when
+- store listing status changes
+- keep deleted/removed records available to admins where appropriate
+- add a simple contact/support email
 
-Goal: show Loop's purpose without making it feel preachy.
+Listing statuses:
 
-- [ ] Add lightweight impact page.
-- [ ] Track number of active listings.
-- [ ] Track free/donation listings.
-- [ ] Track completed swaps/claims.
-- [ ] Estimate money saved.
-- [ ] Estimate waste diverted.
-- [ ] Show simple campus impact stats.
-- [ ] Keep dashboard impact teaser small.
+- active
+- unavailable
+- reused
+- archived
+- hidden
+- removed
 
-Possible stats:
+Acceptable-use rules should be clear and short:
 
-- items reused
-- free items claimed
-- active swaps
-- donation listings
-- estimated money saved
-- estimated waste diverted
+- no dangerous goods
+- no illegal items
+- no spam
+- no harassment
+- no scams
+- no personal data leaks
+- no commercial dumping
+- no unsafe exchange behaviour
 
-### Phase 9: Campus Community Features
+The first moderation system can be simple. The important thing is that unsafe or
+inappropriate content can be reported, reviewed, and acted on quickly.
 
-Goal: make Loop feel local to TU Dublin.
+## 7. Deployment Readiness
 
-- [ ] Add campus profile preference.
-- [ ] Boost listings from user's campus.
-- [ ] Add campus filter shortcut.
-- [ ] Add wanted listings.
-- [ ] Match wanted listings with new posts.
-- [ ] Add borrow/return guidance.
-- [ ] Add safe exchange tips.
+Before any real pilot, Loop needs a production-readiness pass.
 
-### Phase 10: Polish And Report Readiness
+Launch checklist:
 
-Goal: make the project easier to explain and submit.
+- choose production hosting
+- enable HTTPS
+- separate development and production config
+- move secrets out of committed files
+- confirm database credentials for production
+- set up database backups
+- protect uploaded files
+- validate upload image size
+- validate upload image type
+- prevent executable uploads
+- disable public PHP errors
+- enable server-side error logging
+- use prepared statements consistently
+- create an admin account
+- add privacy page
+- add terms/acceptable-use page
+- add contact/support email
+- update GitHub repo
+- update README
+- add database setup notes
+- document deployment steps
+- document how to restore from backup
 
-- [ ] Update README after each major phase.
-- [ ] Add screenshots.
-- [ ] Add database setup notes.
-- [ ] Add feature explanation for recommendation scoring.
-- [ ] Add known limitations.
-- [ ] Add future work section.
-- [ ] Check accessibility labels and focus states.
-- [ ] Check mobile layout.
-- [ ] Test login/register/listing/profile flows.
+The deployment goal is not perfection. The goal is a small service that can run
+safely enough for a controlled pilot.
+
+## 8. Analytics And Usage Tracking
+
+Loop should track progress without invasive analytics or ad-style tracking.
+
+Internal metrics to collect:
+
+- total users
+- verified users
+- active users this week
+- active users this month
+- total listings
+- active listings
+- reused/completed listings
+- free/donation listings
+- saved listings
+- reports submitted
+- listings by campus
+- listings by category
+- most used listing types
+- basic growth over time
+
+Avoid by default:
+
+- external ad analytics
+- invasive user tracking
+- cross-site tracking
+- unnecessary personal profiling
+
+Analytics should help answer:
+
+- Is Loop being used?
+- What categories are useful?
+- Which campuses are active?
+- Are listings being reused or completed?
+- Are reports or misuse increasing?
+- Where are users getting stuck?
+
+## 9. Pilot Launch Plan
+
+Roll Loop out in phases.
+
+### Stage 1: Local Test
+
+- test with developer/admin accounts
+- confirm register/login/logout
+- confirm listing creation
+- confirm image uploads
+- confirm saved listings
+- confirm listing detail pages
+- confirm owner-only controls
+- confirm basic moderation tools
+
+### Stage 2: Trusted Student Test
+
+- invite 3-5 trusted students
+- seed realistic demo listings
+- ask them to post real or test listings
+- collect friction points
+- fix confusing copy or broken flows
+- check mobile layout on real phones
+
+### Stage 3: Small Group Pilot
+
+- test with one class, society, or small campus group
+- require lightweight verification
+- monitor reports and support messages
+- track active users and listing creation
+- ask what people expected but could not do
+
+### Stage 4: Wider Campus Pilot
+
+- invite more students gradually
+- approach student union, societies, or sustainability office
+- add clearer impact reporting
+- improve onboarding and help text
+- review moderation workload
+
+### Stage 5: Live Service
+
+- keep the site running
+- maintain backups
+- monitor errors
+- review reports
+- publish simple usage/impact updates
+- plan features from real behaviour, not guesses
+
+## 10. Post-Launch Roadmap
+
+Prioritise the features that make Loop safer and easier to operate as a live
+service.
+
+### Near-Term After Launch
+
+- My Listings page
+- Edit Listing page
+- better owner listing management
+- mark reused/completed
+- report listing
+- admin moderation
+- verified account flow
+- basic stats dashboard
+
+### Medium-Term
+
+- better recommendations using saves, views, searches, and contacts
+- recommendation reasons
+- wanted listings
+- campus preference
+- near-my-campus shortcut
+- better profile interests
+- safer contact/message workflow
+- impact page
+
+### Longer-Term
+
+- borrow/return workflow
+- wanted-listing matching
+- improved image handling
+- notifications for saved searches or wanted matches
+- stronger admin tools
+- support for more campuses or partner groups
+- exportable impact summary for sustainability teams
+
+## 11. Future Community/Gamification Features
+
+Seller ratings, feedback, badges, and leaderboards are useful ideas, but they are
+not MVP features. They add moderation, fairness, and trust concerns, so they
+should only come after verified accounts, reporting, and admin moderation are in
+place.
+
+Later, Loop may introduce:
+
+- optional feedback after exchange
+- seller/user ratings
+- user trust score
+- profile reputation
+- donation badges
+- reuse badges
+- top reuser style badges
+- campus impact leaderboard
+- society or class reuse challenges
+- gamified sustainability stats
+
+These features should support trust and reuse, not turn Loop into a popularity
+contest. They should be added carefully and tested with real users.
+
+## 12. What Not To Build Yet
+
+Do not build these for the MVP:
+
+- payment systems
+- complex messaging
+- Microsoft/Azure/college SSO
+- machine-learning recommendation models
+- public leaderboards
+- seller ratings
+- feedback scores
+- reputation badges
+- delivery systems
+- heavy notification systems
+- corporate SaaS redesign
+- framework migration
+- monetisation
+
+Loop should stay small, local, useful, and maintainable until the pilot proves
+what students actually need.
+
+## Personalisation Roadmap
+
+Loop should become more personal over time, but it should start simple.
+
+### Current Approach
+
+- use explicit profile interests
+- score category matches
+- boost free/donation listings where relevant
+- boost fresh listings
+- keep search and filters available
+- keep the feed understandable
+
+### Next Signals
+
+- listing views
+- listing clicks
+- saves
+- searches
+- contact attempts
+- reused/completed listings
+- hidden or reported listings
+
+### Later Recommendation Reasons
+
+- recommended because you like a category
+- recommended because you saved similar listings
+- popular near your campus
+- new free item near you
+- matches a wanted listing
+
+Personalisation should help students find useful things faster. It should not
+make the app mysterious or overcomplicated.
 
 ## Frictionless UX Checklist
 
 Use this checklist before adding any feature:
 
-- [ ] Can the user understand it in 3 seconds?
-- [ ] Can the user complete the action in under 30 seconds?
-- [ ] Is there a clear button?
-- [ ] Is the form asking only what it really needs?
-- [ ] Does it work on mobile?
-- [ ] Is there a useful empty state?
-- [ ] Does it avoid fake data pretending to be real?
-- [ ] Does it help reuse, affordability, or sustainability?
-- [ ] Does it make the marketplace feel more personal or useful?
-
-## Recommendation Roadmap
-
-### Now
-
-Use explicit profile interests.
-
-Recommended score:
-
-- category match
-- free/donation interest
-- swap boost
-- freshness
-- small discovery boost
-
-### Next
-
-Add behaviour signals:
-
-- view
-- click
-- save
-- search
-- contact/message
-- claim
-- hide
-
-### Later
-
-Add explanations:
-
-- Recommended because you like music.
-- Recommended because you saved free items.
-- Popular on your campus.
-- New free item near you.
-
-## What Not To Build Yet
-
-Do not rush into:
-
-- payment systems
-- complex messaging
-- admin dashboards
-- machine learning models
-- notifications
-- delivery systems
-- corporate-looking redesigns
-
-Loop should stay small, useful, local, and easy to understand.
+- Can the user understand it in 3 seconds?
+- Can the user complete the action in under 30 seconds?
+- Is there a clear button?
+- Is the form asking only what it really needs?
+- Does it work on mobile?
+- Is there a useful empty state?
+- Does it avoid fake data pretending to be real?
+- Does it help reuse, affordability, or sustainability?
+- Does it make the marketplace feel more personal or useful?
+- Does it keep the app easy to maintain?
 
 ## Next Best Step
 
-The next best engineering step is Phase 3:
+The next best engineering steps are:
 
-1. Add listing detail page.
-2. Add owner-only edit/archive listing actions.
-3. Make listing cards link to full details.
-4. Add a safe contact placeholder.
+1. Commit and push current working version.
+2. Run a production-readiness audit.
+3. Build My Listings.
+4. Build Edit Listing.
+5. Add listing status: active / unavailable / reused / archived.
+6. Add mark reused/completed.
+7. Add Report Listing.
+8. Add basic Admin Review page.
+9. Add lightweight TU Dublin email verification.
+10. Add production deployment checklist.
+11. Add basic internal stats.
+12. Deploy to staging.
+13. Run a small pilot.
 
-This makes the marketplace feel usable without adding too much complexity.
+This is the practical path from working prototype to live campus service.

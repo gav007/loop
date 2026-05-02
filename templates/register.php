@@ -87,10 +87,10 @@ session_start();
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="Enter your Loop email"
+                  placeholder="your.name@tudublin.ie"
                   required
                 />
-                <p class="hero-copy"></p>
+                <p class="form-note">TU Dublin email required (@tudublin.ie or @mytudublin.ie)</p>
               </div>
 
               <div class="field-group">
