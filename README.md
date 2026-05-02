@@ -11,6 +11,38 @@ This repository was prepared for **Server-side Web Development COMP3101**
 
 The website includes a landing page, user registration, login, protected dashboard, logout, profile interests, real listing creation, image upload, listing detail pages, saved listings, and a database-backed marketplace feed.
 
+## Screenshots
+
+These screenshots show the current Loop branding and key user flows.
+
+### Landing and Branding
+
+![Loop landing page with blue branding and sign-in form](docs/screenshots/01-landing-branding.png)
+
+### Dashboard Launchpad
+
+![Loop dashboard with welcome panel, quick actions, interests, saved count, and impact teaser](docs/screenshots/02-dashboard-launchpad.png)
+
+### Dark Mode
+
+![Loop dashboard in dark mode showing readable cards and navigation](docs/screenshots/03-dashboard-dark-mode.png)
+
+### Marketplace Feed
+
+![Loop marketplace page with search, filters, recommended sorting, and listing cards](docs/screenshots/04-marketplace-feed.png)
+
+### Listing Detail
+
+![Loop listing detail page with image, item facts, saved state, and contact placeholder](docs/screenshots/05-listing-detail.png)
+
+### Create Listing
+
+![Loop create listing form with categories, listing type, campus, and image upload](docs/screenshots/06-create-listing-form.png)
+
+### Profile, Interests, and Saved Items
+
+![Loop profile page with interest checkboxes and saved listings preview](docs/screenshots/07-profile-interests-saved.png)
+
 The aim of the project is to show core PHP lab topics such as:
 
 - server-side form validation
