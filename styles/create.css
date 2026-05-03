@@ -53,8 +53,10 @@
 .search-bar-container input {
     width: 100%;
     padding: 10px 15px;
-    border: 2px solid #b7c5e8;
+    border: 2px solid var(--color-field-border);
     border-radius: 12px;
+    background-color: var(--color-field-bg);
+    color: var(--color-field-text);
     font-family: "Inter", sans-serif;
     font-size: 15px;
 }
@@ -451,39 +453,104 @@
     margin-bottom: 18px;
 }
 
+/* ============================================================
+   INTEREST CHIPS — redesigned as interactive pill cards
+   Native checkbox is hidden. :has(:checked) drives selected state.
+   ============================================================ */
+
 .interest-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
-    margin-top: 12px;
+    margin-top: 16px;
 }
 
+/* Completely hide the native checkbox */
+.interest-option input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Chip base */
 .interest-option {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border: 1px solid #b7c5e8;
-    border-radius: 12px;
-    background: #f8f7f5;
-    color: #2f477a;
+    gap: 9px;
+    padding: 12px 14px;
+    border: 2px solid #dde4f5;
+    border-radius: 999px;
+    background: #f5f7fd;
+    color: #4a5a80;
     cursor: pointer;
-    transition:
-        background-color 0.15s ease,
-        color 0.15s ease,
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.15s ease;
+    user-select: none;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.22s ease,
+                color 0.22s ease,
+                transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.22s ease;
 }
 
-.interest-option:hover,
-.interest-option:focus-within {
-    background: #e4eaf8;
+.interest-icon {
+    font-size: 17px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.interest-label {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hover */
+.interest-option:hover {
     border-color: #91a8da;
+    background: #eef2fb;
+    color: #2f477a;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(59, 89, 152, 0.14);
 }
 
-.interest-option input {
-    accent-color: #3b5998;
+/* Selected state — CSS-only via :has() */
+.interest-option:has(input:checked) {
+    background: linear-gradient(135deg, #3b5998, #5b7fd6);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: 0 6px 22px rgba(59, 89, 152, 0.42);
+    transform: translateY(-1px);
+}
+
+/* Checkmark appears on the right when selected */
+.interest-check {
+    display: none;
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.interest-option:has(input:checked) .interest-check {
+    display: inline;
+}
+
+/* Spring pop on toggle */
+@keyframes interest-pop {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.12) translateY(-5px); }
+    100% { transform: scale(1)   translateY(-1px); }
+}
+
+.interest-option.interest-popping {
+    animation: interest-pop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .form-label {
@@ -1172,4 +1239,406 @@
         min-height: 44px;
         padding: 10px 16px;
     }
+}
+
+/* ============================================================
+   LISTING CARD — hover lift
+   8px lift + scale + border glow = clearly interactive
+   ============================================================ */
+
+.listing-card {
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
+    cursor: pointer;
+}
+
+.listing-card:hover {
+    transform: translateY(-8px) scale(1.015);
+    box-shadow: 0 24px 48px rgba(31, 53, 97, 0.18);
+    border-color: #91a8da;
+}
+
+.listing-card:hover .listing-card-media img {
+    transform: scale(1.05);
+    transition: transform 0.4s ease;
+}
+
+.listing-card-media img {
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* ============================================================
+   BADGE POP — fires when scroll-reveal adds .reveal-done
+   ============================================================ */
+
+@keyframes badge-pop {
+    0%   { transform: scale(0.5);  opacity: 0; }
+    65%  { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+.reveal-done .listing-type-badge {
+    animation: badge-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+.reveal-done .status-pill {
+    animation: badge-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+
+/* ============================================================
+   SKELETON SHIMMER — live search loading state
+   ============================================================ */
+
+@keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position:  400px 0; }
+}
+
+.listing-grid--searching .listing-card {
+    pointer-events: none;
+    opacity: 0.45;
+    animation: shimmer 1.2s linear infinite;
+    background: linear-gradient(
+        90deg,
+        #f8f7f5 25%,
+        #d6e0f5 50%,
+        #f8f7f5 75%
+    );
+    background-size: 400px 100%;
+}
+
+/* ============================================================
+   SAVE BUTTON MICRO-ANIMATION
+   ============================================================ */
+
+@keyframes save-pop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.22); }
+    70%  { transform: scale(0.92); }
+    100% { transform: scale(1); }
+}
+
+.listing-save-button--saving {
+    animation: save-pop 0.3s ease;
+    pointer-events: none;
+}
+
+/* ============================================================
+   IMAGE BLUR-UP REVEAL
+   ============================================================ */
+
+.listing-card-media img,
+.listing-detail-media img,
+.owner-listing-media img {
+    filter: blur(6px);
+    transition: filter 0.4s ease;
+}
+
+.listing-card-media img.img-loaded,
+.listing-detail-media img.img-loaded,
+.owner-listing-media img.img-loaded {
+    filter: blur(0);
+}
+
+/* ============================================================
+   ACTIVE FILTER CHIPS
+   ============================================================ */
+
+.field-group--active label {
+    color: #3b5998;
+    font-weight: 700;
+}
+
+.field-group--active .field {
+    border-color: #3b5998;
+    background-color: #eef2fb;
+    color: #14213d;
+}
+
+.field-group--active label::after {
+    content: " ✓";
+    font-size: 11px;
+    color: #4d9b69;
+}
+
+.dark-theme .field-group--active label {
+    color: #ffffff;
+}
+
+.dark-theme .field-group--active .field {
+    border-color: rgba(255, 255, 255, 0.58);
+    background-color: #342650;
+    color: #ffffff;
+}
+
+.dark-theme .field-group--active label::after {
+    color: #9de0b5;
+}
+
+/* ============================================================
+   ONBOARDING MODAL ENTRANCE
+   ============================================================ */
+
+.onboarding-overlay {
+    animation: backdrop-in 0.25s ease both;
+}
+
+.onboarding-modal {
+    animation: modal-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+@keyframes backdrop-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes modal-in {
+    from { opacity: 0; transform: scale(0.75) translateY(40px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* ============================================================
+   LIVE SEARCH — empty result state
+   ============================================================ */
+
+.listing-grid-empty-search {
+    display: none;
+    grid-column: 1 / -1;
+    padding: 32px;
+    text-align: center;
+    color: #5b6f9d;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.listing-grid-empty-search.visible {
+    display: block;
+}
+
+/* ============================================================
+   QUICK ACTION — ripple needs overflow:hidden (already on card)
+   ============================================================ */
+
+.quick-action {
+    position: relative;
+    overflow: hidden;
+}
+
+/* ============================================================
+   DARK THEME CONTRAST SYSTEM
+   ============================================================ */
+
+.dark-theme .sidebar {
+    background: #1e172c;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.30);
+}
+
+.dark-theme .main-content,
+.dark-theme .marketplace-tools,
+.dark-theme .marketplace-results,
+.dark-theme .dashboard-section {
+    background: var(--color-card);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.dark-theme .page-intro p,
+.dark-theme .dashboard-welcome p,
+.dark-theme .dashboard-teaser p,
+.dark-theme .listing-card p,
+.dark-theme .owner-listing-body p,
+.dark-theme .listing-detail-section p,
+.dark-theme .owner-actions p,
+.dark-theme .empty-state p,
+.dark-theme .form-note,
+.dark-theme .saved-listing-item span {
+    color: #c9c1d8;
+}
+
+.dark-theme .eyebrow,
+.dark-theme .listing-details dt {
+    color: #ffb79f;
+}
+
+.dark-theme .quick-action,
+.dark-theme .quick-action:visited,
+.dark-theme .impact-card,
+.dark-theme .empty-state,
+.dark-theme .listing-card,
+.dark-theme .owner-listing-card,
+.dark-theme .edit-listing-preview,
+.dark-theme .saved-listing-item a,
+.dark-theme .contact-placeholder,
+.dark-theme .contact-section,
+.dark-theme .contact-cta,
+.dark-theme .onboarding-modal {
+    background: #2d243d;
+    border-color: rgba(255, 255, 255, 0.16);
+    color: #f7f4ff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.dark-theme .quick-action:hover,
+.dark-theme .quick-action:focus-visible,
+.dark-theme .listing-card:hover,
+.dark-theme .saved-listing-item a:hover,
+.dark-theme .saved-listing-item a:focus-visible {
+    background: #372d4a;
+    border-color: rgba(255, 255, 255, 0.32);
+    color: #ffffff;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32);
+}
+
+.dark-theme .quick-action strong,
+.dark-theme .quick-action span,
+.dark-theme .impact-card strong,
+.dark-theme .impact-card span,
+.dark-theme .listing-card h3,
+.dark-theme .owner-listing-body h3,
+.dark-theme .edit-listing-preview h2,
+.dark-theme .listing-details dd,
+.dark-theme .saved-listing-item strong {
+    color: #ffffff;
+}
+
+.dark-theme .sidebar nav h3 a,
+.dark-theme .sidebar nav h3 a:visited {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #d8d1e5;
+}
+
+.dark-theme .sidebar nav h3 a:hover,
+.dark-theme .sidebar nav h3 a:focus-visible {
+    background: #302640;
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+}
+
+.dark-theme .sidebar nav h3 a.active {
+    background: #fffaf2;
+    border-color: #cc4216;
+    border-left-color: #cc4216;
+    color: #1b1b1f;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.dark-theme .search-bar-container input,
+.dark-theme .field {
+    background-color: #fffaf2;
+    border-color: rgba(255, 255, 255, 0.82);
+    color: #1b1b1f;
+}
+
+.dark-theme .search-bar-container input::placeholder,
+.dark-theme .field::placeholder {
+    color: #77727b;
+}
+
+.dark-theme .search-bar-container input:hover,
+.dark-theme .search-bar-container input:focus-visible,
+.dark-theme .field:hover,
+.dark-theme .field:focus-visible {
+    background-color: #ffffff;
+    border-color: #ffb79f;
+}
+
+.dark-theme .search-bar-container button,
+.dark-theme .marketplace-filter-form .btn {
+    background: #f5f1ea;
+    border-color: rgba(255, 255, 255, 0.72);
+    color: #1b1b1f;
+}
+
+.dark-theme .search-bar-container button:hover,
+.dark-theme .search-bar-container button:focus-visible,
+.dark-theme .marketplace-filter-form .btn:hover,
+.dark-theme .marketplace-filter-form .btn:focus-visible {
+    background: #fffaf2;
+    border-color: #ffb79f;
+    color: #1b1b1f;
+}
+
+.dark-theme .field-group--active label {
+    color: #ffb79f;
+}
+
+.dark-theme .field-group--active .field {
+    background-color: #fffaf2;
+    border-color: #cc4216;
+    color: #1b1b1f;
+    box-shadow: 0 0 0 3px rgba(204, 66, 22, 0.20);
+}
+
+.dark-theme .field-group--active label::after {
+    color: #ffb79f;
+}
+
+.dark-theme .status-pill,
+.dark-theme .listing-save-button {
+    background: #fffaf2;
+    border-color: rgba(255, 255, 255, 0.72);
+    color: #1b1b1f;
+}
+
+.dark-theme .listing-save-button:hover,
+.dark-theme .listing-save-button:focus-visible,
+.dark-theme .listing-save-button.is-saved {
+    background: #cc4216;
+    border-color: #cc4216;
+    color: #ffffff;
+}
+
+.dark-theme .listing-type-badge {
+    background: rgba(107, 220, 145, 0.18);
+    border-color: rgba(107, 220, 145, 0.34);
+    color: #d8f6df;
+}
+
+.dark-theme .listing-card-media,
+.dark-theme .listing-detail-media,
+.dark-theme .owner-listing-media {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(204, 66, 22, 0.12)),
+        #21192f;
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.dark-theme .profile-saved-preview,
+.dark-theme .listing-detail-section,
+.dark-theme .owner-actions {
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.dark-theme .interest-option {
+    min-height: 46px;
+    padding: 12px 16px;
+    background: #302640;
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #eee8f8;
+}
+
+.dark-theme .interest-label {
+    white-space: normal;
+    line-height: 1.25;
+}
+
+.dark-theme .interest-option:hover,
+.dark-theme .interest-option:focus-within {
+    background: #3a2f4e;
+    border-color: rgba(255, 255, 255, 0.34);
+    color: #ffffff;
+}
+
+.dark-theme .interest-option:has(input:checked) {
+    background: #cc4216;
+    border-color: #ff8b62;
+    color: #ffffff;
+    box-shadow: 0 10px 22px rgba(204, 66, 22, 0.28);
+}
+
+.dark-theme .onboarding-modal p {
+    color: #c9c1d8;
 }
